@@ -16,10 +16,8 @@ export function WelcomeScreen({ onStart }: WelcomeScreenProps) {
             </linearGradient>
           </defs>
           <rect width="64" height="64" rx="14" fill="url(#logoGrad)"/>
-          <path d="M32 10c-4 0-7 2-9 5-3 0-6 3-6 7 0 2 1 4 2 5-1 1-2 3-2 5 0 4 3 7 7 7v8h16v-8c4 0 7-3 7-7 0-2-1-4-2-5 1-1 2-3 2-5 0-4-3-7-6-7-2-3-5-5-9-5z" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-          <path d="M32 15v24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-          <path d="M24 22c3 0 5 2 5 4M22 30c4 0 6 2 6 4" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
-          <path d="M40 22c-3 0-5 2-5 4M42 30c-4 0-6 2-6 4" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
+          <path d="M32 8c-5 0-8 2-10 6-4 0-7 3-7 8 0 2 1 4 2 6-1 1-2 3-2 5 0 4 3 7 7 8v6h20v-6c4-1 7-4 7-8 0-2-1-4-2-5 1-2 2-4 2-6 0-5-3-8-7-8-2-4-5-6-10-6z" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+          <text x="32" y="35" fontFamily="system-ui, sans-serif" fontSize="20" fontWeight="bold" fill="white" textAnchor="middle">Z</text>
         </svg>
         <h1 className="text-3xl font-bold text-white mb-2">Zama Protocol Quiz</h1>
         <p className="text-gray-400">Put your Zama knowledge to the test</p>
