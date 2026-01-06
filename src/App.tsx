@@ -87,24 +87,31 @@ function App() {
     setShowExplanation(true);
   }, []);
 
+  const scrollToTop = useCallback(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
   const handleNext = useCallback(() => {
     if (currentQuestion < questions.length - 1) {
       setCurrentQuestion(prev => prev + 1);
       setShowExplanation(reviewMode);
+      scrollToTop();
     }
-  }, [currentQuestion, reviewMode]);
+  }, [currentQuestion, reviewMode, scrollToTop]);
 
   const handlePrevious = useCallback(() => {
     if (currentQuestion > 0) {
       setCurrentQuestion(prev => prev - 1);
       setShowExplanation(reviewMode);
+      scrollToTop();
     }
-  }, [currentQuestion, reviewMode]);
+  }, [currentQuestion, reviewMode, scrollToTop]);
 
   const handleSelectQuestion = useCallback((index: number) => {
     setCurrentQuestion(index);
     setShowExplanation(reviewMode || answers[index] !== null);
-  }, [reviewMode, answers]);
+    scrollToTop();
+  }, [reviewMode, answers, scrollToTop]);
 
   const handleFinish = useCallback(() => {
     setScreen('results');
