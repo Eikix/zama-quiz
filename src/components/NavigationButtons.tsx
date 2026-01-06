@@ -3,6 +3,7 @@ interface NavigationButtonsProps {
   totalQuestions: number;
   hasAnswered: boolean;
   showExplanation: boolean;
+  reviewMode: boolean;
   onPrevious: () => void;
   onNext: () => void;
   onCheck: () => void;
@@ -14,6 +15,7 @@ export function NavigationButtons({
   totalQuestions,
   hasAnswered,
   showExplanation,
+  reviewMode,
   onPrevious,
   onNext,
   onCheck,
@@ -23,13 +25,17 @@ export function NavigationButtons({
 
   return (
     <div className="flex justify-between mt-8">
-      <button
-        onClick={onPrevious}
-        disabled={currentQuestion === 0}
-        className="px-6 py-3 rounded-xl font-medium transition-all duration-200 disabled:opacity-30 disabled:cursor-not-allowed bg-stone-700 text-gray-200 hover:bg-stone-600"
-      >
-        Previous
-      </button>
+      {reviewMode ? (
+        <button
+          onClick={onPrevious}
+          disabled={currentQuestion === 0}
+          className="px-6 py-3 rounded-xl font-medium transition-all duration-200 disabled:opacity-30 disabled:cursor-not-allowed bg-stone-700 text-gray-200 hover:bg-stone-600"
+        >
+          Previous
+        </button>
+      ) : (
+        <div></div>
+      )}
 
       <div className="flex gap-3">
         {!showExplanation && hasAnswered && (

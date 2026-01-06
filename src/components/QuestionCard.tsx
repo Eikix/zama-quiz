@@ -4,6 +4,7 @@ interface QuestionCardProps {
   question: Question;
   selectedAnswer: number | null;
   showExplanation: boolean;
+  locked: boolean;
   onSelectAnswer: (index: number) => void;
 }
 
@@ -11,9 +12,11 @@ export function QuestionCard({
   question, 
   selectedAnswer, 
   showExplanation,
+  locked,
   onSelectAnswer 
 }: QuestionCardProps) {
   const isCorrect = selectedAnswer === question.correctAnswer;
+  const canSelect = !showExplanation && !locked;
 
   return (
     <div className="bg-stone-800 rounded-2xl p-8 shadow-xl border border-stone-700">
@@ -44,15 +47,17 @@ export function QuestionCard({
             }
           } else if (isSelected) {
             buttonClass += "bg-orange-900/50 border-orange-500 text-orange-100";
-          } else {
+          } else if (canSelect) {
             buttonClass += "bg-stone-700/50 border-stone-600 text-gray-200 hover:border-orange-500 hover:bg-stone-700";
+          } else {
+            buttonClass += "bg-stone-700/50 border-stone-600 text-gray-400 cursor-not-allowed";
           }
 
           return (
             <button
               key={index}
-              onClick={() => !showExplanation && onSelectAnswer(index)}
-              disabled={showExplanation}
+              onClick={() => canSelect && onSelectAnswer(index)}
+              disabled={!canSelect}
               className={buttonClass}
             >
               <span className="flex items-center gap-3">

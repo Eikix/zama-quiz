@@ -4,6 +4,7 @@ interface QuestionNavProps {
   answers: (number | null)[];
   correctAnswers: number[];
   showResults: boolean;
+  reviewMode: boolean;
   onSelectQuestion: (index: number) => void;
 }
 
@@ -13,6 +14,7 @@ export function QuestionNav({
   answers, 
   correctAnswers,
   showResults,
+  reviewMode,
   onSelectQuestion 
 }: QuestionNavProps) {
   return (
@@ -24,6 +26,10 @@ export function QuestionNav({
           const isCurrent = i === currentQuestion;
           const isCorrect = showResults && answers[i] === correctAnswers[i];
           const isWrong = showResults && isAnswered && answers[i] !== correctAnswers[i];
+          
+          // In quiz mode, can only navigate to unanswered questions
+          // In review mode, can navigate anywhere
+          const isClickable = reviewMode || !isAnswered || isCurrent;
 
           let buttonClass = "w-full aspect-square rounded-lg text-sm font-medium transition-all duration-200 ";
           
@@ -41,6 +47,9 @@ export function QuestionNav({
             }
           } else if (isAnswered) {
             buttonClass += "bg-orange-500 text-white";
+            if (!reviewMode && !isCurrent) {
+              buttonClass += " cursor-not-allowed";
+            }
           } else {
             buttonClass += "bg-stone-700 text-gray-400 hover:bg-stone-600";
           }
@@ -48,7 +57,8 @@ export function QuestionNav({
           return (
             <button
               key={i}
-              onClick={() => onSelectQuestion(i)}
+              onClick={() => isClickable && onSelectQuestion(i)}
+              disabled={!isClickable}
               className={buttonClass}
             >
               {i + 1}

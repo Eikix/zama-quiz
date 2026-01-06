@@ -190,6 +190,7 @@ function App() {
               question={questions[currentQuestion]}
               selectedAnswer={answers[currentQuestion]}
               showExplanation={showExplanation}
+              locked={!reviewMode && answers[currentQuestion] !== null}
               onSelectAnswer={handleSelectAnswer}
             />
 
@@ -198,6 +199,7 @@ function App() {
               totalQuestions={questions.length}
               hasAnswered={answers[currentQuestion] !== null}
               showExplanation={showExplanation}
+              reviewMode={reviewMode}
               onPrevious={handlePrevious}
               onNext={handleNext}
               onCheck={handleCheck}
@@ -212,6 +214,7 @@ function App() {
               answers={answers}
               correctAnswers={questions.map(q => q.correctAnswer)}
               showResults={reviewMode}
+              reviewMode={reviewMode}
               onSelectQuestion={handleSelectQuestion}
             />
           </div>
