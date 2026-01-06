@@ -178,15 +178,15 @@ export const questions: Question[] = [
   {
     id: 14,
     section: "Decryption Mechanisms",
-    question: "In delegated user decryption, which EIP-712 field prevents the delegate from impersonating a different user?",
+    question: "In delegated user decryption, the delegate signs an EIP-712 message. Which field prevents them from claiming to act on behalf of a different user than authorized?",
     options: [
       "publicKey (prevents result hijacking)",
       "contractAddresses (limits scope to specific contracts)",
-      "delegatorAddress (binds delegation to user identity)",
+      "delegatorAddress (binds request to specific user)",
       "durationDays (time-bounds the delegation)"
     ],
     correctAnswer: 2,
-    explanation: "The delegatorAddress field binds the delegation to a specific user's identity - the delegate cannot forge a signature claiming to act on behalf of someone else. The publicKey prevents a different attack: result hijacking (ensuring results are encrypted to the user's key, not an attacker's)."
+    explanation: "The delegate signs the EIP-712 (not the user). The delegatorAddress field is included so a delegate cannot reuse their signature to claim authorization from a different user. The Gateway verifies both the signature AND that the ACL contains a matching delegation from that specific delegatorAddress."
   },
   {
     id: 15,
