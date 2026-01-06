@@ -1,0 +1,111 @@
+import type { Question, SectionScore } from '../types/quiz';
+import { sections } from '../data/questions';
+
+interface ResultsProps {
+  questions: Question[];
+  answers: (number | null)[];
+  onRestart: () => void;
+  onReview: () => void;
+}
+
+export function Results({ questions, answers, onRestart, onReview }: ResultsProps) {
+  const correctCount = answers.reduce<number>((acc, answer, index) => {
+    return answer === questions[index].correctAnswer ? acc + 1 : acc;
+  }, 0);
+
+  const percentage = Math.round((correctCount / questions.length) * 100);
+
+  const sectionScores: SectionScore[] = sections.map(section => {
+    const sectionQuestions = questions.filter(q => q.section === section);
+    const correct = sectionQuestions.filter((q) => {
+      const questionIndex = questions.findIndex(qq => qq.id === q.id);
+      return answers[questionIndex] === q.correctAnswer;
+    }).length;
+    return { name: section, correct, total: sectionQuestions.length };
+  });
+
+  const getGrade = () => {
+    if (percentage >= 92) return { emoji: '🏆', label: 'Expert', color: 'text-yellow-400' };
+    if (percentage >= 76) return { emoji: '🥇', label: 'Advanced', color: 'text-blue-400' };
+    if (percentage >= 60) return { emoji: '🥈', label: 'Intermediate', color: 'text-gray-300' };
+    if (percentage >= 40) return { emoji: '🥉', label: 'Beginner', color: 'text-amber-600' };
+    return { emoji: '📚', label: 'Keep Studying', color: 'text-red-400' };
+  };
+
+  const grade = getGrade();
+
+  return (
+    <div className="bg-gray-800 rounded-2xl p-8 shadow-xl border border-gray-700">
+      <div className="text-center mb-8">
+        <div className="text-6xl mb-4">{grade.emoji}</div>
+        <h2 className="text-3xl font-bold text-white mb-2">Quiz Complete!</h2>
+        <p className={`text-xl font-semibold ${grade.color}`}>{grade.label}</p>
+      </div>
+
+      <div className="flex justify-center mb-8">
+        <div className="relative w-40 h-40">
+          <svg className="w-full h-full transform -rotate-90">
+            <circle
+              cx="80"
+              cy="80"
+              r="70"
+              stroke="currentColor"
+              strokeWidth="12"
+              fill="none"
+              className="text-gray-700"
+            />
+            <circle
+              cx="80"
+              cy="80"
+              r="70"
+              stroke="currentColor"
+              strokeWidth="12"
+              fill="none"
+              strokeDasharray={2 * Math.PI * 70}
+              strokeDashoffset={2 * Math.PI * 70 * (1 - percentage / 100)}
+              className="text-purple-500 transition-all duration-1000 ease-out"
+              strokeLinecap="round"
+            />
+          </svg>
+          <div className="absolute inset-0 flex flex-col items-center justify-center">
+            <span className="text-4xl font-bold text-white">{percentage}%</span>
+            <span className="text-sm text-gray-400">{correctCount}/{questions.length}</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="space-y-4 mb-8">
+        <h3 className="text-lg font-semibold text-white mb-4">Section Breakdown</h3>
+        {sectionScores.map((section) => (
+          <div key={section.name} className="bg-gray-700/50 rounded-xl p-4">
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-gray-300 text-sm">{section.name}</span>
+              <span className="text-white font-medium">{section.correct}/{section.total}</span>
+            </div>
+            <div className="h-2 bg-gray-600 rounded-full overflow-hidden">
+              <div 
+                className="h-full bg-gradient-to-r from-purple-600 to-blue-500 transition-all duration-500"
+                style={{ width: `${(section.correct / section.total) * 100}%` }}
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="flex gap-4">
+        <button
+          onClick={onReview}
+          className="flex-1 px-6 py-3 rounded-xl font-medium transition-all duration-200 bg-gray-700 text-gray-200 hover:bg-gray-600"
+        >
+          Review Answers
+        </button>
+        <button
+          onClick={onRestart}
+          className="flex-1 px-6 py-3 rounded-xl font-medium transition-all duration-200 bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-500 hover:to-blue-500"
+        >
+          Start Over
+        </button>
+      </div>
+    </div>
+  );
+}
