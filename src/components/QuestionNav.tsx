@@ -28,7 +28,7 @@ export function QuestionNav({
           let buttonClass = "w-full aspect-square rounded-lg text-sm font-medium transition-all duration-200 ";
           
           if (isCurrent) {
-            buttonClass += "ring-2 ring-purple-500 ring-offset-2 ring-offset-gray-800 ";
+            buttonClass += "ring-2 ring-orange-500 ring-offset-2 ring-offset-gray-800 ";
           }
 
           if (showResults) {
@@ -40,7 +40,7 @@ export function QuestionNav({
               buttonClass += "bg-gray-700 text-gray-400";
             }
           } else if (isAnswered) {
-            buttonClass += "bg-purple-600 text-white";
+            buttonClass += "bg-orange-500 text-white";
           } else {
             buttonClass += "bg-gray-700 text-gray-400 hover:bg-gray-600";
           }

@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  --zama-purple: #7c3aed;
-  --zama-purple-dark: #5b21b6;
-  --zama-blue: #3b82f6;
+  --zama-orange: #fb923c;
+  --zama-orange-dark: #ea580c;
+  --zama-amber: #f59e0b;
 }

@@ -26,7 +26,7 @@ export function Results({ questions, answers, onRestart, onReview }: ResultsProp
 
   const getGrade = () => {
     if (percentage >= 92) return { emoji: '🏆', label: 'Expert', color: 'text-yellow-400' };
-    if (percentage >= 76) return { emoji: '🥇', label: 'Advanced', color: 'text-blue-400' };
+    if (percentage >= 76) return { emoji: '🥇', label: 'Advanced', color: 'text-orange-400' };
     if (percentage >= 60) return { emoji: '🥈', label: 'Intermediate', color: 'text-gray-300' };
     if (percentage >= 40) return { emoji: '🥉', label: 'Beginner', color: 'text-amber-600' };
     return { emoji: '📚', label: 'Keep Studying', color: 'text-red-400' };
@@ -63,7 +63,7 @@ export function Results({ questions, answers, onRestart, onReview }: ResultsProp
               fill="none"
               strokeDasharray={2 * Math.PI * 70}
               strokeDashoffset={2 * Math.PI * 70 * (1 - percentage / 100)}
-              className="text-purple-500 transition-all duration-1000 ease-out"
+              className="text-orange-500 transition-all duration-1000 ease-out"
               strokeLinecap="round"
             />
           </svg>
@@ -84,7 +84,7 @@ export function Results({ questions, answers, onRestart, onReview }: ResultsProp
             </div>
             <div className="h-2 bg-gray-600 rounded-full overflow-hidden">
               <div 
-                className="h-full bg-gradient-to-r from-purple-600 to-blue-500 transition-all duration-500"
+                className="h-full bg-gradient-to-r from-orange-500 to-amber-500 transition-all duration-500"
                 style={{ width: `${(section.correct / section.total) * 100}%` }}
               />
             </div>
@@ -101,7 +101,7 @@ export function Results({ questions, answers, onRestart, onReview }: ResultsProp
         </button>
         <button
           onClick={onRestart}
-          className="flex-1 px-6 py-3 rounded-xl font-medium transition-all duration-200 bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-500 hover:to-blue-500"
+          className="flex-1 px-6 py-3 rounded-xl font-medium transition-all duration-200 bg-gradient-to-r from-orange-500 to-amber-500 text-white hover:from-orange-400 hover:to-amber-400"
         >
           Start Over
         </button>

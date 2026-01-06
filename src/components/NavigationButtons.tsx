@@ -35,7 +35,7 @@ export function NavigationButtons({
         {!showExplanation && hasAnswered && (
           <button
             onClick={onCheck}
-            className="px-6 py-3 rounded-xl font-medium transition-all duration-200 bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-500 hover:to-blue-500"
+            className="px-6 py-3 rounded-xl font-medium transition-all duration-200 bg-gradient-to-r from-orange-500 to-amber-500 text-white hover:from-orange-400 hover:to-amber-400"
           >
             Check Answer
           </button>
@@ -44,7 +44,7 @@ export function NavigationButtons({
         {showExplanation && !isLastQuestion && (
           <button
             onClick={onNext}
-            className="px-6 py-3 rounded-xl font-medium transition-all duration-200 bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-500 hover:to-blue-500"
+            className="px-6 py-3 rounded-xl font-medium transition-all duration-200 bg-gradient-to-r from-orange-500 to-amber-500 text-white hover:from-orange-400 hover:to-amber-400"
           >
             Next Question
           </button>

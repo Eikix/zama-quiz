@@ -18,7 +18,7 @@ export function QuestionCard({
   return (
     <div className="bg-gray-800 rounded-2xl p-8 shadow-xl border border-gray-700">
       <div className="mb-2">
-        <span className="text-xs font-semibold text-purple-400 uppercase tracking-wider">
+        <span className="text-xs font-semibold text-orange-400 uppercase tracking-wider">
           {question.section}
         </span>
       </div>
@@ -43,9 +43,9 @@ export function QuestionCard({
               buttonClass += "bg-gray-700/50 border-gray-600 text-gray-400";
             }
           } else if (isSelected) {
-            buttonClass += "bg-purple-900/50 border-purple-500 text-purple-100";
+            buttonClass += "bg-orange-900/50 border-orange-500 text-orange-100";
           } else {
-            buttonClass += "bg-gray-700/50 border-gray-600 text-gray-200 hover:border-purple-500 hover:bg-gray-700";
+            buttonClass += "bg-gray-700/50 border-gray-600 text-gray-200 hover:border-orange-500 hover:bg-gray-700";
           }
 
           return (
