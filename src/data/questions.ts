@@ -178,19 +178,6 @@ export const questions: Question[] = [
   {
     id: 14,
     section: "Decryption Mechanisms",
-    question: "In delegated user decryption, the delegate signs an EIP-712 message. Which field prevents them from claiming to act on behalf of a different user than authorized?",
-    options: [
-      "publicKey (prevents result hijacking)",
-      "contractAddresses (limits scope to specific contracts)",
-      "delegatorAddress (binds request to specific user)",
-      "durationDays (time-bounds the delegation)"
-    ],
-    correctAnswer: 2,
-    explanation: "The delegate signs the EIP-712 (not the user). The delegatorAddress field is included so a delegate cannot reuse their signature to claim authorization from a different user. The Gateway verifies both the signature AND that the ACL contains a matching delegation from that specific delegatorAddress."
-  },
-  {
-    id: 15,
-    section: "Decryption Mechanisms",
     question: "How does a user verify that a user decryption result is legitimate?",
     options: [
       "They trust the App",
@@ -202,7 +189,7 @@ export const questions: Question[] = [
     explanation: "The user receives decryption shares signed by KMS nodes. They verify these signatures against the key-map (KMS verifier addresses from the context) to ensure no KMS node impersonation occurred."
   },
   {
-    id: 16,
+    id: 15,
     section: "Decryption Mechanisms",
     question: "Gateway decryption request IDs follow the format [kmsRequestType | keychainId | counter]. What is the purpose of including kmsRequestType?",
     options: [
@@ -217,7 +204,7 @@ export const questions: Question[] = [
 
   // Section 4: Service Interactions
   {
-    id: 17,
+    id: 16,
     section: "Service Interactions",
     question: "Which statement about Coprocessor-Gateway communication is FALSE?",
     options: [
@@ -230,7 +217,7 @@ export const questions: Question[] = [
     explanation: "FHE computation requests come from the Host Chain, not the Gateway. Coprocessors listen to Host Chain events (via their embedded full node) for FHE operations. The Gateway is used for: (1) ZKPoK verification requests/responses, (2) ACL synchronization, (3) ciphertext commits, and (4) key management info. The Host Chain is where smart contracts emit FHE operation events."
   },
   {
-    id: 18,
+    id: 17,
     section: "Service Interactions",
     question: "Where does the Relayer sit in the Zama protocol architecture?",
     options: [
@@ -243,7 +230,7 @@ export const questions: Question[] = [
     explanation: "The Relayer sits between the user and the Gateway. It abstracts all Gateway interactions so users only need a Host Chain wallet. The Relayer forwards ZKPoK verification requests, handles decryption coordination, and pays Gateway gas on the user's behalf."
   },
   {
-    id: 19,
+    id: 18,
     section: "Service Interactions",
     question: "Which event type does the Coprocessor's Host Listener NOT handle?",
     options: [
@@ -256,7 +243,7 @@ export const questions: Question[] = [
     explanation: "ZKPoK verification requests come from the Gateway (handled by GW Listener), not the Host Chain. The Host Listener handles TFHE operations, ACL events, and decryption requests - all emitted by Host Chain contracts. Input verification flows through the Gateway first."
   },
   {
-    id: 20,
+    id: 19,
     section: "Service Interactions",
     question: "What does the KMS Connector do?",
     options: [
@@ -269,7 +256,7 @@ export const questions: Question[] = [
     explanation: "The KMS Connector picks up events (like decryption requests) from the Gateway via a GW Listener and forwards them to the KMS Core for MPC execution. It then relays responses back to the Gateway."
   },
   {
-    id: 21,
+    id: 20,
     section: "Service Interactions",
     question: "How many Coprocessors does Zama operate as of early 2026?",
     options: [
@@ -284,7 +271,7 @@ export const questions: Question[] = [
 
   // Section 5: Advanced Concepts
   {
-    id: 22,
+    id: 21,
     section: "Advanced Concepts",
     question: "According to NIST SP 800-57 (followed by Zama), what can you do with an Active key that you CANNOT do with a Suspended key?",
     options: [
@@ -297,7 +284,7 @@ export const questions: Question[] = [
     explanation: "Both Active and Suspended keys allow inputs, FHE computation, decryption, and key switching (both as source and target). The key difference: you cannot launch a new key rotation from a Suspended key. Note: key switching (converting ciphertexts between keys) is different from key rotation (the administrative process of replacing a key with a new one)."
   },
   {
-    id: 23,
+    id: 22,
     section: "Advanced Concepts",
     question: "How does the Zama protocol handle key rotation for existing ciphertexts?",
     options: [
@@ -310,7 +297,7 @@ export const questions: Question[] = [
     explanation: "Zama uses FHE key switching. When a computation involves ciphertexts encrypted under older keys, the Coprocessor uses KSKs to convert them to the current key 'just-in-time' during execution."
   },
   {
-    id: 24,
+    id: 23,
     section: "Advanced Concepts",
     question: "AWS Nitro Enclaves in TKMS protect key shares from which threat?",
     options: [
@@ -323,7 +310,7 @@ export const questions: Question[] = [
     explanation: "Nitro Enclaves create an isolated execution environment where even the node operator (with root access to the host machine) cannot access the key shares. The enclave's memory is encrypted and inaccessible from outside. Network security and smart contract threats are handled by other mechanisms."
   },
   {
-    id: 25,
+    id: 24,
     section: "Advanced Concepts",
     question: "What is the role of tfhe-rs in the Zama ecosystem?",
     options: [
@@ -336,7 +323,7 @@ export const questions: Question[] = [
     explanation: "tfhe-rs is the cryptographic foundation implementing LWE/GLWE-based TFHE. It provides Programmable Bootstrapping (PBS), keyswitching, and the FheUint/FheBool types. Coprocessors use it for all FHE computations."
   },
   {
-    id: 26,
+    id: 25,
     section: "Advanced Concepts",
     question: "Why is random 'noise' added to TFHE ciphertexts during encryption?",
     options: [
@@ -349,7 +336,7 @@ export const questions: Question[] = [
     explanation: "Noise is essential for security - without it, TFHE encryption could be broken. The noise is encoded in the least significant bits of the ciphertext. The tradeoff: each operation increases noise, and if it grows too large it corrupts the message."
   },
   {
-    id: 27,
+    id: 26,
     section: "Advanced Concepts",
     question: "What problem does Programmable Bootstrapping (PBS) solve in TFHE?",
     options: [
@@ -362,7 +349,7 @@ export const questions: Question[] = [
     explanation: "Noise grows with each FHE operation. If it gets too large, it corrupts the encrypted result. PBS resets noise back to a safe level, allowing more operations to be performed. Without PBS, you'd hit a noise limit and need to decrypt early."
   },
   {
-    id: 28,
+    id: 27,
     section: "Advanced Concepts",
     question: "Why would you re-randomize a ciphertext before using it in an FHE computation?",
     options: [
@@ -375,7 +362,7 @@ export const questions: Question[] = [
     explanation: "Re-randomization adds fresh randomness to a ciphertext. Without it, an attacker observing the same ciphertext used multiple times could potentially learn information about the plaintext. It's a security hardening measure for sensitive computations."
   },
   {
-    id: 29,
+    id: 28,
     section: "Advanced Concepts",
     question: "According to Zama's whitepaper benchmarks, approximately how long does a 64-bit encrypted multiplication take on GPU (2x NVIDIA H100)?",
     options: [
@@ -388,7 +375,7 @@ export const questions: Question[] = [
     explanation: "A euint64 multiplication takes approximately 166ms on GPU (2x H100). GPU acceleration provides roughly 2-3x speedup for complex operations like multiplication compared to CPU."
   },
   {
-    id: 30,
+    id: 29,
     section: "Advanced Concepts",
     question: "According to Zama's whitepaper benchmarks, approximately how long does a 64-bit encrypted addition take on CPU (AMD EPYC 9R14)?",
     options: [
@@ -401,7 +388,7 @@ export const questions: Question[] = [
     explanation: "A euint64 addition takes approximately 109ms on CPU (AMD EPYC 9R14 with 192 cores). Addition is faster than multiplication but slower than bitwise operations. On GPU, addition drops to ~20ms."
   },
   {
-    id: 31,
+    id: 30,
     section: "Advanced Concepts",
     question: "Which FHE operation is fastest according to Zama's whitepaper benchmarks?",
     options: [
