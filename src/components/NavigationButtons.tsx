@@ -26,7 +26,7 @@ export function NavigationButtons({
       <button
         onClick={onPrevious}
         disabled={currentQuestion === 0}
-        className="px-6 py-3 rounded-xl font-medium transition-all duration-200 disabled:opacity-30 disabled:cursor-not-allowed bg-gray-700 text-gray-200 hover:bg-gray-600"
+        className="px-6 py-3 rounded-xl font-medium transition-all duration-200 disabled:opacity-30 disabled:cursor-not-allowed bg-stone-700 text-gray-200 hover:bg-stone-600"
       >
         Previous
       </button>
@@ -62,7 +62,7 @@ export function NavigationButtons({
         {!showExplanation && !hasAnswered && !isLastQuestion && (
           <button
             onClick={onNext}
-            className="px-6 py-3 rounded-xl font-medium transition-all duration-200 bg-gray-700 text-gray-200 hover:bg-gray-600"
+            className="px-6 py-3 rounded-xl font-medium transition-all duration-200 bg-stone-700 text-gray-200 hover:bg-stone-600"
           >
             Skip
           </button>

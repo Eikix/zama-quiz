@@ -16,7 +16,7 @@ export function QuestionCard({
   const isCorrect = selectedAnswer === question.correctAnswer;
 
   return (
-    <div className="bg-gray-800 rounded-2xl p-8 shadow-xl border border-gray-700">
+    <div className="bg-stone-800 rounded-2xl p-8 shadow-xl border border-stone-700">
       <div className="mb-2">
         <span className="text-xs font-semibold text-orange-400 uppercase tracking-wider">
           {question.section}
@@ -40,12 +40,12 @@ export function QuestionCard({
             } else if (isSelected && !isCorrectOption) {
               buttonClass += "bg-red-900/50 border-red-500 text-red-100";
             } else {
-              buttonClass += "bg-gray-700/50 border-gray-600 text-gray-400";
+              buttonClass += "bg-stone-700/50 border-stone-600 text-gray-400";
             }
           } else if (isSelected) {
             buttonClass += "bg-orange-900/50 border-orange-500 text-orange-100";
           } else {
-            buttonClass += "bg-gray-700/50 border-gray-600 text-gray-200 hover:border-orange-500 hover:bg-gray-700";
+            buttonClass += "bg-stone-700/50 border-stone-600 text-gray-200 hover:border-orange-500 hover:bg-stone-700";
           }
 
           return (
@@ -56,7 +56,7 @@ export function QuestionCard({
               className={buttonClass}
             >
               <span className="flex items-center gap-3">
-                <span className="flex-shrink-0 w-8 h-8 rounded-lg bg-gray-600 flex items-center justify-center text-sm font-medium">
+                <span className="flex-shrink-0 w-8 h-8 rounded-lg bg-stone-600 flex items-center justify-center text-sm font-medium">
                   {String.fromCharCode(65 + index)}
                 </span>
                 <span>{option}</span>

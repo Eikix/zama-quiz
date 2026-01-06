@@ -16,7 +16,7 @@ export function QuestionNav({
   onSelectQuestion 
 }: QuestionNavProps) {
   return (
-    <div className="bg-gray-800 rounded-2xl p-4 shadow-xl border border-gray-700">
+    <div className="bg-stone-800 rounded-2xl p-4 shadow-xl border border-stone-700">
       <h3 className="text-sm font-semibold text-gray-400 mb-3">Questions</h3>
       <div className="grid grid-cols-5 gap-2">
         {Array.from({ length: totalQuestions }, (_, i) => {
@@ -28,7 +28,7 @@ export function QuestionNav({
           let buttonClass = "w-full aspect-square rounded-lg text-sm font-medium transition-all duration-200 ";
           
           if (isCurrent) {
-            buttonClass += "ring-2 ring-orange-500 ring-offset-2 ring-offset-gray-800 ";
+            buttonClass += "ring-2 ring-orange-500 ring-offset-2 ring-offset-stone-800 ";
           }
 
           if (showResults) {
@@ -37,12 +37,12 @@ export function QuestionNav({
             } else if (isWrong) {
               buttonClass += "bg-red-600 text-white";
             } else {
-              buttonClass += "bg-gray-700 text-gray-400";
+              buttonClass += "bg-stone-700 text-gray-400";
             }
           } else if (isAnswered) {
             buttonClass += "bg-orange-500 text-white";
           } else {
-            buttonClass += "bg-gray-700 text-gray-400 hover:bg-gray-600";
+            buttonClass += "bg-stone-700 text-gray-400 hover:bg-stone-600";
           }
 
           return (

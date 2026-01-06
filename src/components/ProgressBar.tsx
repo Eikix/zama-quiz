@@ -13,7 +13,7 @@ export function ProgressBar({ current, total, answeredCount }: ProgressBarProps)
         <span>Question {current + 1} of {total}</span>
         <span>{answeredCount} answered</span>
       </div>
-      <div className="h-2 bg-gray-700 rounded-full overflow-hidden">
+      <div className="h-2 bg-stone-700 rounded-full overflow-hidden">
         <div 
           className="h-full bg-gradient-to-r from-orange-500 to-amber-500 transition-all duration-300 ease-out"
           style={{ width: `${progress}%` }}

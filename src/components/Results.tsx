@@ -35,7 +35,7 @@ export function Results({ questions, answers, onRestart, onReview }: ResultsProp
   const grade = getGrade();
 
   return (
-    <div className="bg-gray-800 rounded-2xl p-8 shadow-xl border border-gray-700">
+    <div className="bg-stone-800 rounded-2xl p-8 shadow-xl border border-stone-700">
       <div className="text-center mb-8">
         <div className="text-6xl mb-4">{grade.emoji}</div>
         <h2 className="text-3xl font-bold text-white mb-2">Quiz Complete!</h2>
@@ -52,7 +52,7 @@ export function Results({ questions, answers, onRestart, onReview }: ResultsProp
               stroke="currentColor"
               strokeWidth="12"
               fill="none"
-              className="text-gray-700"
+              className="text-stone-700"
             />
             <circle
               cx="80"
@@ -77,12 +77,12 @@ export function Results({ questions, answers, onRestart, onReview }: ResultsProp
       <div className="space-y-4 mb-8">
         <h3 className="text-lg font-semibold text-white mb-4">Section Breakdown</h3>
         {sectionScores.map((section) => (
-          <div key={section.name} className="bg-gray-700/50 rounded-xl p-4">
+          <div key={section.name} className="bg-stone-700/50 rounded-xl p-4">
             <div className="flex justify-between items-center mb-2">
               <span className="text-gray-300 text-sm">{section.name}</span>
               <span className="text-white font-medium">{section.correct}/{section.total}</span>
             </div>
-            <div className="h-2 bg-gray-600 rounded-full overflow-hidden">
+            <div className="h-2 bg-stone-600 rounded-full overflow-hidden">
               <div 
                 className="h-full bg-gradient-to-r from-orange-500 to-amber-500 transition-all duration-500"
                 style={{ width: `${(section.correct / section.total) * 100}%` }}
@@ -95,7 +95,7 @@ export function Results({ questions, answers, onRestart, onReview }: ResultsProp
       <div className="flex gap-4">
         <button
           onClick={onReview}
-          className="flex-1 px-6 py-3 rounded-xl font-medium transition-all duration-200 bg-gray-700 text-gray-200 hover:bg-gray-600"
+          className="flex-1 px-6 py-3 rounded-xl font-medium transition-all duration-200 bg-stone-700 text-gray-200 hover:bg-stone-600"
         >
           Review Answers
         </button>

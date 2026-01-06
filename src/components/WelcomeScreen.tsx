@@ -6,7 +6,7 @@ interface WelcomeScreenProps {
 
 export function WelcomeScreen({ onStart }: WelcomeScreenProps) {
   return (
-    <div className="bg-gray-800 rounded-2xl p-8 shadow-xl border border-gray-700 text-center">
+    <div className="bg-stone-800 rounded-2xl p-8 shadow-xl border border-stone-700 text-center">
       <div className="mb-6">
         <svg className="w-20 h-20 mx-auto mb-4" viewBox="0 0 64 64">
           <defs>
@@ -24,11 +24,11 @@ export function WelcomeScreen({ onStart }: WelcomeScreenProps) {
       </div>
 
       <div className="grid grid-cols-2 gap-4 mb-8 text-left">
-        <div className="bg-gray-700/50 rounded-xl p-4">
+        <div className="bg-stone-700/50 rounded-xl p-4">
           <div className="text-2xl font-bold text-orange-400">{questions.length}</div>
           <div className="text-sm text-gray-400">Questions</div>
         </div>
-        <div className="bg-gray-700/50 rounded-xl p-4">
+        <div className="bg-stone-700/50 rounded-xl p-4">
           <div className="text-2xl font-bold text-amber-400">5</div>
           <div className="text-sm text-gray-400">Sections</div>
         </div>

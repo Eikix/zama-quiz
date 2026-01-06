@@ -125,7 +125,7 @@ function App() {
 
   if (screen === 'welcome') {
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-stone-900 flex items-center justify-center p-4">
         <div className="w-full max-w-lg">
           <WelcomeScreen onStart={handleStart} />
         </div>
@@ -135,7 +135,7 @@ function App() {
 
   if (screen === 'results') {
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-stone-900 flex items-center justify-center p-4">
         <div className="w-full max-w-lg">
           <Results 
             questions={questions}
@@ -149,7 +149,7 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 p-4 md:p-8">
+    <div className="min-h-screen bg-stone-900 p-4 md:p-8">
       <div className="max-w-6xl mx-auto">
         <header className="mb-8">
           <div className="flex items-center justify-between mb-2">
@@ -157,7 +157,7 @@ function App() {
             <h1 className="text-xl sm:text-2xl font-bold text-white">Zama Protocol Quiz</h1>
             <button
               onClick={handleReset}
-              className="px-2 sm:px-3 py-1.5 text-xs sm:text-sm rounded-lg bg-gray-700 text-gray-300 hover:bg-gray-600 hover:text-white transition-colors whitespace-nowrap"
+              className="px-2 sm:px-3 py-1.5 text-xs sm:text-sm rounded-lg bg-stone-700 text-gray-300 hover:bg-stone-600 hover:text-white transition-colors whitespace-nowrap"
             >
               Reset
             </button>
