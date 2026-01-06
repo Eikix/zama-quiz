@@ -81,11 +81,8 @@ function App() {
       newAnswers[currentQuestion] = index;
       return newAnswers;
     });
-  }, [currentQuestion]);
-
-  const handleCheck = useCallback(() => {
     setShowExplanation(true);
-  }, []);
+  }, [currentQuestion]);
 
   const scrollToTop = useCallback(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -202,7 +199,6 @@ function App() {
               reviewMode={reviewMode}
               onPrevious={handlePrevious}
               onNext={handleNext}
-              onCheck={handleCheck}
               onFinish={handleFinish}
             />
           </div>

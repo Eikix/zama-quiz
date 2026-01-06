@@ -6,7 +6,6 @@ interface NavigationButtonsProps {
   reviewMode: boolean;
   onPrevious: () => void;
   onNext: () => void;
-  onCheck: () => void;
   onFinish: () => void;
 }
 
@@ -18,7 +17,6 @@ export function NavigationButtons({
   reviewMode,
   onPrevious,
   onNext,
-  onCheck,
   onFinish,
 }: NavigationButtonsProps) {
   const isLastQuestion = currentQuestion === totalQuestions - 1;
@@ -38,15 +36,6 @@ export function NavigationButtons({
       )}
 
       <div className="flex gap-3">
-        {!showExplanation && hasAnswered && (
-          <button
-            onClick={onCheck}
-            className="px-6 py-3 rounded-xl font-medium transition-all duration-200 bg-gradient-to-r from-orange-500 to-amber-500 text-white hover:from-orange-400 hover:to-amber-400"
-          >
-            Check Answer
-          </button>
-        )}
-
         {showExplanation && !isLastQuestion && (
           <button
             onClick={onNext}
