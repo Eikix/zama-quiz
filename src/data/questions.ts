@@ -232,15 +232,15 @@ export const questions: Question[] = [
   {
     id: 18,
     section: "Service Interactions",
-    question: "What does the Relayer SDK primarily help users avoid?",
+    question: "Where does the Relayer sit in the Zama protocol architecture?",
     options: [
-      "Paying gas on the Host Chain",
-      "Interacting directly with the Gateway chain and paying gas there",
-      "Generating ZK proofs",
-      "Creating Ethereum wallets"
+      "Between the user and the Host Chain",
+      "Between the user and the Gateway",
+      "Between the user and the Coprocessor",
+      "Between the Coprocessor and the Gateway"
     ],
     correctAnswer: 1,
-    explanation: "The Relayer abstracts the Gateway chain entirely. Users only need a Host Chain wallet. The Relayer handles Gateway interactions, ZKPoK verification forwarding, and KMS coordination."
+    explanation: "The Relayer sits between the user and the Gateway. It abstracts all Gateway interactions so users only need a Host Chain wallet. The Relayer forwards ZKPoK verification requests, handles decryption coordination, and pays Gateway gas on the user's behalf."
   },
   {
     id: 19,
