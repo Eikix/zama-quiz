@@ -178,15 +178,15 @@ export const questions: Question[] = [
   {
     id: 14,
     section: "Decryption Mechanisms",
-    question: "Which function does a user call to authorize an App to request decryptions on their behalf?",
+    question: "In delegated user decryption, what must the user include in their EIP-712 signature to prevent impersonation by the delegate?",
     options: [
-      "FHE.allowDecryption()",
-      "FHE.delegateUserDecryption()",
-      "ACL.grantDecryptPermission()",
-      "Gateway.authorizeApp()"
+      "The delegate's private key",
+      "The ciphertext handles being decrypted",
+      "Their own address (delegatorAddress)",
+      "The KMS node public keys"
     ],
-    correctAnswer: 1,
-    explanation: "Users call FHE.delegateUserDecryption(delegate, contractAddress, expirationDate) to grant an App the right to request user decryptions. This creates an on-chain delegation in the ACL that the Gateway verifies before processing decryption requests."
+    correctAnswer: 2,
+    explanation: "The user signs a message containing their own delegatorAddress. This binds the delegation to their identity - the delegate cannot forge a signature claiming to act on behalf of a different user. The signature also includes the publicKey for re-encryption, contractAddresses, and a validity window."
   },
   {
     id: 15,
@@ -286,15 +286,15 @@ export const questions: Question[] = [
   {
     id: 22,
     section: "Advanced Concepts",
-    question: "According to NIST SP 800-57 (followed by Zama), which key state still allows FHE computation and key switching, but NOT new key rotations?",
+    question: "According to NIST SP 800-57 (followed by Zama), what can you do with an Active key that you CANNOT do with a Suspended key?",
     options: [
-      "Active",
-      "Suspended",
-      "Deactivated",
-      "Pre-activation"
+      "Perform FHE computations",
+      "Decrypt existing ciphertexts",
+      "Launch a new key rotation",
+      "Be a target for key switching"
     ],
-    correctAnswer: 1,
-    explanation: "Suspended is a temporary state when a key is replaced by a new Active key. It still allows inputs, FHE computation, decryption, and being a target for key switching - but no new key rotations can be launched from it. Deactivated only allows decryption. This ensures no service disruption during key transitions."
+    correctAnswer: 2,
+    explanation: "Both Active and Suspended keys allow inputs, FHE computation, decryption, and being a key switching target. The key difference: you cannot launch a new key rotation from a Suspended key. Suspended is a temporary state during key transitions - operations continue but no further rotations can be initiated from it."
   },
   {
     id: 23,
