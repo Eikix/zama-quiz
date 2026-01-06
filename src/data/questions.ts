@@ -312,15 +312,15 @@ export const questions: Question[] = [
   {
     id: 24,
     section: "Advanced Concepts",
-    question: "What is the purpose of AWS Nitro Enclaves in the KMS architecture?",
+    question: "AWS Nitro Enclaves in TKMS protect key shares from which threat?",
     options: [
-      "Faster computation",
-      "Hardware isolation ensuring key shares never leave a trusted execution environment",
-      "Cheaper cloud hosting",
-      "Better network connectivity"
+      "Network attackers intercepting traffic between KMS nodes",
+      "Malicious smart contracts on the Host Chain",
+      "The KMS node operator themselves accessing the key material",
+      "Coprocessors submitting fraudulent computation results"
     ],
-    correctAnswer: 1,
-    explanation: "Nitro Enclaves provide a secure execution environment where even the node operator cannot access the key shares. AWS KMS policies require cryptographic attestation (PCR0) matching the expected enclave image."
+    correctAnswer: 2,
+    explanation: "Nitro Enclaves create an isolated execution environment where even the node operator (with root access to the host machine) cannot access the key shares. The enclave's memory is encrypted and inaccessible from outside. Network security and smart contract threats are handled by other mechanisms."
   },
   {
     id: 25,
