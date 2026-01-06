@@ -178,15 +178,15 @@ export const questions: Question[] = [
   {
     id: 14,
     section: "Decryption Mechanisms",
-    question: "For user decryption, what must the user sign to authorize an App to decrypt on their behalf?",
+    question: "Which function does a user call to authorize an App to request decryptions on their behalf?",
     options: [
-      "The ciphertext handles directly",
-      "An EIP-712 message containing their public key, app_id, and contract context",
-      "The private FHE key",
-      "A simple text message"
+      "FHE.allowDecryption()",
+      "FHE.delegateUserDecryption()",
+      "ACL.grantDecryptPermission()",
+      "Gateway.authorizeApp()"
     ],
     correctAnswer: 1,
-    explanation: "The user signs a hash of their address, context (allowed contracts), app_id, and a public encryption key (pk). This perm signature authorizes the App to request decryptions and have results encrypted to that pk."
+    explanation: "Users call FHE.delegateUserDecryption(delegate, contractAddress, expirationDate) to grant an App the right to request user decryptions. This creates an on-chain delegation in the ACL that the Gateway verifies before processing decryption requests."
   },
   {
     id: 15,
@@ -286,15 +286,15 @@ export const questions: Question[] = [
   {
     id: 22,
     section: "Advanced Concepts",
-    question: "According to NIST SP 800-57 (followed by Zama), which key state allows encryption AND decryption?",
+    question: "According to NIST SP 800-57 (followed by Zama), which key state still allows FHE computation and key switching, but NOT new key rotations?",
     options: [
-      "Pre-activation",
       "Active",
       "Suspended",
-      "Deactivated"
+      "Deactivated",
+      "Pre-activation"
     ],
     correctAnswer: 1,
-    explanation: "Only the Active state allows both encryption and decryption. Pre-activation means the key exists but isn't used yet. Suspended, Deactivated, and Compromised states only allow decryption (for legacy ciphertexts)."
+    explanation: "Suspended is a temporary state when a key is replaced by a new Active key. It still allows inputs, FHE computation, decryption, and being a target for key switching - but no new key rotations can be launched from it. Deactivated only allows decryption. This ensures no service disruption during key transitions."
   },
   {
     id: 23,
