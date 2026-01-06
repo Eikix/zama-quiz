@@ -181,12 +181,12 @@ export const questions: Question[] = [
     question: "In delegated user decryption, what must the user include in their EIP-712 signature to prevent impersonation by the delegate?",
     options: [
       "The delegate's address",
-      "The ciphertext handles being decrypted",
+      "The re-encryption public key",
       "Their own address (delegatorAddress)",
       "The contract addresses allowed for decryption"
     ],
     correctAnswer: 2,
-    explanation: "The user signs a message containing their own delegatorAddress. This binds the delegation to their identity - the delegate cannot forge a signature claiming to act on behalf of a different user. The delegate's address and contract addresses are also included, but they don't prevent impersonation - only the delegatorAddress does."
+    explanation: "The user signs a message containing their own delegatorAddress. This binds the delegation to their identity - the delegate cannot forge a signature claiming to act on behalf of a different user. The other fields (delegate address, public key, contract addresses) are also signed but control authorization scope, not identity."
   },
   {
     id: 15,
