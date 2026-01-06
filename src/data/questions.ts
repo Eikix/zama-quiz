@@ -291,10 +291,10 @@ export const questions: Question[] = [
       "Perform FHE computations",
       "Decrypt existing ciphertexts",
       "Launch a new key rotation",
-      "Be a target for key switching"
+      "Be a source or target for key switching"
     ],
     correctAnswer: 2,
-    explanation: "Both Active and Suspended keys allow inputs, FHE computation, decryption, and being a key switching target. The key difference: you cannot launch a new key rotation from a Suspended key. Suspended is a temporary state during key transitions - operations continue but no further rotations can be initiated from it."
+    explanation: "Both Active and Suspended keys allow inputs, FHE computation, decryption, and key switching (both as source and target). The key difference: you cannot launch a new key rotation from a Suspended key. Note: key switching (converting ciphertexts between keys) is different from key rotation (the administrative process of replacing a key with a new one)."
   },
   {
     id: 23,
