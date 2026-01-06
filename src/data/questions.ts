@@ -180,13 +180,13 @@ export const questions: Question[] = [
     section: "Decryption Mechanisms",
     question: "In delegated user decryption, what must the user include in their EIP-712 signature to prevent impersonation by the delegate?",
     options: [
-      "The delegate's private key",
+      "The delegate's address",
       "The ciphertext handles being decrypted",
       "Their own address (delegatorAddress)",
-      "The KMS node public keys"
+      "The contract addresses allowed for decryption"
     ],
     correctAnswer: 2,
-    explanation: "The user signs a message containing their own delegatorAddress. This binds the delegation to their identity - the delegate cannot forge a signature claiming to act on behalf of a different user. The signature also includes the publicKey for re-encryption, contractAddresses, and a validity window."
+    explanation: "The user signs a message containing their own delegatorAddress. This binds the delegation to their identity - the delegate cannot forge a signature claiming to act on behalf of a different user. The delegate's address and contract addresses are also included, but they don't prevent impersonation - only the delegatorAddress does."
   },
   {
     id: 15,
