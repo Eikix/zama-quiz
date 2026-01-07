@@ -1,5 +1,8 @@
+import { useState } from 'react';
 import type { ShuffledQuestion, SectionScore } from '../types/quiz';
 import { sections } from '../data/questions';
+import { SubmitScore } from './SubmitScore';
+import { Leaderboard } from './Leaderboard';
 
 interface ResultsProps {
   questions: ShuffledQuestion[];
@@ -9,6 +12,8 @@ interface ResultsProps {
 }
 
 export function Results({ questions, answers, onRestart, onReview }: ResultsProps) {
+  const [submittedUsername, setSubmittedUsername] = useState<string | null>(null);
+  
   const correctCount = answers.reduce<number>((acc, answer, index) => {
     return answer === questions[index].shuffledCorrectAnswer ? acc + 1 : acc;
   }, 0);
@@ -42,7 +47,7 @@ export function Results({ questions, answers, onRestart, onReview }: ResultsProp
         <p className={`text-xl font-semibold ${grade.color}`}>{grade.label}</p>
       </div>
 
-      <div className="flex justify-center mb-8">
+      <div className="flex justify-center mb-10">
         <div className="relative w-40 h-40">
           <svg className="w-full h-full transform -rotate-90">
             <circle
@@ -74,37 +79,52 @@ export function Results({ questions, answers, onRestart, onReview }: ResultsProp
         </div>
       </div>
 
-      <div className="space-y-4 mb-8">
-        <h3 className="text-lg font-semibold text-white mb-4">Section Breakdown</h3>
+      <div className="mb-10">
+        {!submittedUsername ? (
+          <SubmitScore
+            score={correctCount}
+            total={questions.length}
+            onSubmitted={setSubmittedUsername}
+          />
+        ) : (
+          <Leaderboard
+            currentUserScore={{ score: correctCount, total: questions.length }}
+            highlightUsername={submittedUsername}
+          />
+        )}
+      </div>
+
+      <div className="flex gap-4 mb-10">
+        <button
+          onClick={onReview}
+          className="flex-1 px-6 py-4 rounded-xl font-medium transition-all duration-200 bg-stone-700 text-gray-200 hover:bg-stone-600 hover:text-white border border-transparent hover:border-stone-500"
+        >
+          Review Answers
+        </button>
+        <button
+          onClick={onRestart}
+          className="flex-1 px-6 py-4 rounded-xl font-medium transition-all duration-200 bg-stone-700 text-gray-200 hover:bg-stone-600 hover:text-white border border-transparent hover:border-stone-500"
+        >
+          Start Over
+        </button>
+      </div>
+
+      <div className="space-y-4 pt-8 border-t border-stone-700/50">
+        <h3 className="text-sm font-bold text-stone-500 uppercase tracking-widest text-center mb-6">Performance Breakdown</h3>
         {sectionScores.map((section) => (
-          <div key={section.name} className="bg-stone-700/50 rounded-xl p-4">
+          <div key={section.name} className="bg-stone-700/30 rounded-xl p-4">
             <div className="flex justify-between items-center mb-2">
               <span className="text-gray-300 text-sm">{section.name}</span>
               <span className="text-white font-medium">{section.correct}/{section.total}</span>
             </div>
             <div className="h-2 bg-stone-600 rounded-full overflow-hidden">
               <div 
-                className="h-full bg-gradient-to-r from-orange-500 to-amber-500 transition-all duration-500"
+                className="h-full bg-stone-400 transition-all duration-500"
                 style={{ width: `${(section.correct / section.total) * 100}%` }}
               />
             </div>
           </div>
         ))}
-      </div>
-
-      <div className="flex gap-4">
-        <button
-          onClick={onReview}
-          className="flex-1 px-6 py-3 rounded-xl font-medium transition-all duration-200 bg-stone-700 text-gray-200 hover:bg-stone-600"
-        >
-          Review Answers
-        </button>
-        <button
-          onClick={onRestart}
-          className="flex-1 px-6 py-3 rounded-xl font-medium transition-all duration-200 bg-gradient-to-r from-orange-500 to-amber-500 text-white hover:from-orange-400 hover:to-amber-400"
-        >
-          Start Over
-        </button>
       </div>
     </div>
   );

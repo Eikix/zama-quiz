@@ -365,15 +365,15 @@ export const questions: Question[] = [
   {
     id: "64VC",
     section: "Advanced Concepts",
-    question: "According to Zama's whitepaper benchmarks, approximately how long does a 64-bit encrypted multiplication take on GPU (2x NVIDIA H100)?",
+    question: "With Zama's latest GPU optimizations (8x NVIDIA H100, dedicated GPU parameters), approximately how long does a 64-bit encrypted multiplication take?",
     options: [
-      "~1 ms",
-      "~20 ms",
-      "~170 ms",
-      "~400 ms"
+      "~8 ms",
+      "~32 ms",
+      "~95 ms",
+      "~170 ms"
     ],
-    correctAnswer: 2,
-    explanation: "A euint64 multiplication takes approximately 166ms on GPU (2x H100). GPU acceleration provides roughly 2-3x speedup for complex operations like multiplication compared to CPU."
+    correctAnswer: 1,
+    explanation: "With 8x H100 GPUs and dedicated GPU parameters, euint64 multiplication takes approximately 32ms. This is a significant improvement over earlier benchmarks thanks to optimized GPU-specific parameters."
   },
   {
     id: "PJUT",
@@ -386,7 +386,7 @@ export const questions: Question[] = [
       "~400 ms"
     ],
     correctAnswer: 2,
-    explanation: "A euint64 addition takes approximately 109ms on CPU (AMD EPYC 9R14 with 192 cores). Addition is faster than multiplication but slower than bitwise operations. On GPU, addition drops to ~20ms."
+    explanation: "A euint64 addition takes approximately 109ms on CPU (AMD EPYC 9R14 with 192 cores). Addition is faster than multiplication but slower than bitwise operations."
   },
   {
     id: "8XSA",
@@ -399,7 +399,7 @@ export const questions: Question[] = [
       "Bitwise AND/OR"
     ],
     correctAnswer: 3,
-    explanation: "Bitwise operations (AND/OR) are the fastest at ~19-23ms on CPU and ~3-4ms on GPU for euint64. This is because they don't require Programmable Bootstrapping, unlike arithmetic operations which are significantly slower."
+    explanation: "Bitwise operations (AND/OR) are among the fastest at ~19-23ms on CPU for euint64. While they do require Programmable Bootstrapping (PBS) since they're non-linear, the lookup tables involved are simpler than those for arithmetic operations like multiplication or division."
   },
   {
     id: "RDRR",
