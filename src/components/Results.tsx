@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import type { ShuffledQuestion, SectionScore, Difficulty } from '../types/quiz';
-import { beginnerSections, advancedSections } from '../data/questions';
+import { beginnerSections, advancedSections, businessSections } from '../data/questions';
 import { SubmitScore } from './SubmitScore';
 import { Leaderboard } from './Leaderboard';
+import { SuggestQuestionButton } from './SuggestQuestionButton';
 
 interface ResultsProps {
   questions: ShuffledQuestion[];
@@ -21,7 +22,7 @@ export function Results({ questions, answers, mode, onRestart, onReview }: Resul
 
   const percentage = Math.round((correctCount / questions.length) * 100);
 
-  const sections = mode === 'beginner' ? beginnerSections : advancedSections;
+  const sections = mode === 'beginner' ? beginnerSections : mode === 'business' ? businessSections : advancedSections;
   const sectionScores: SectionScore[] = sections.map(section => {
     const sectionQuestions = questions.filter(q => q.section === section);
     const correct = sectionQuestions.filter((q) => {
@@ -129,6 +130,11 @@ export function Results({ questions, answers, mode, onRestart, onReview }: Resul
             </div>
           </div>
         ))}
+      </div>
+
+      <div className="pt-8 border-t border-stone-700/50 text-center">
+        <p className="text-gray-400 text-sm mb-3">Know a good question we're missing?</p>
+        <SuggestQuestionButton mode={mode} />
       </div>
     </div>
   );
