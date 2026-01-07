@@ -1,0 +1,220 @@
+## Session Summary: Zama Quiz App - Beginner Mode Revision & Business Value Questions
+
+### Project Location
+`/Users/eliastazartes/code/zama/zama-quiz-app`
+
+### Tech Stack
+React 19 + TypeScript + Vite 7 + Tailwind CSS 4 + Supabase
+
+### What Was Done This Session
+
+#### 1. **Beginner Questions Complete Rewrite**
+Rewrote all beginner questions based on user feedback. Key corrections:
+- **fhEVM is a Solidity library**, NOT a modified EVM or separate blockchain
+- Removed gaming as a use case (not a primary Zama focus)
+- Fixed technical inaccuracies (balances stored off-chain with handles on-chain, not "encrypted on-chain")
+- Balanced answer option lengths so correct answer isn't obvious
+
+**Questions updated in `src/data/questions.ts`:**
+- B005: Bootstrapping - answer now "Resets noise to a low level", explanation mentions PBS/ciphertext refreshing
+- B008: fhEVM - now asks "What does the fhEVM library do?" with GitHub description
+- B015: Confidential transfers - focuses on FHE operations, not storage architecture
+- Removed B013 (ebool comparison) and B014 (logging handles) as too technical
+
+**Current beginner question count: 18** (down from 20 after removals)
+
+#### 2. **UX Improvements**
+- **Text selection**: Questions, answers, and explanations now selectable (changed buttons to divs with `select-text`)
+- **Question nav colors**: Shows green/red immediately after answering (not just in review mode)
+- **Navigation fix**: "Next" button now jumps to next unanswered question (was stuck before)
+- **Env flag for beginner mode**: `VITE_ENABLE_BEGINNER_MODE=true` in `.env.local` enables locally; hidden in prod
+
+#### 3. **Files Modified**
+- `src/data/questions.ts` - Beginner questions rewritten
+- `src/components/WelcomeScreen.tsx` - Mode selector controlled by env var
+- `src/components/QuestionCard.tsx` - Text selection enabled
+- `src/components/QuestionNav.tsx` - Immediate correct/wrong colors
+- `src/components/NavigationButtons.tsx` - "Next" jumps to next unanswered
+- `src/App.tsx` - Pass new props to NavigationButtons
+- `.env.local` - Created with `VITE_ENABLE_BEGINNER_MODE=true` (gitignored)
+- `agents.md` - Added GitHub issues check, fhEVM clarifications
+- `PLAN-easy-mode.md` - Updated with correct fhEVM definition
+
+### Current Task: Business Value Questions for Advanced Quiz
+
+**Context**: Jason (Zama's ecosystem/business dev lead) wants questions ensuring Zama devs who don't know blockchain/crypto understand:
+- WHY Zama protocol exists
+- WHY privacy matters for mainstream adoption
+- What differentiates Zama from Aztec, Canton, Zcash
+- The business value proposition
+
+**Source Material**: Video transcript in `video-transcript/bankless/` folder:
+- `summary.txt` - Structured summary of Bankless interview with Rand Hindi (Zama founder)
+- `NoteGPT_TRANSCRIPT_1767791422994.txt` - Full transcript
+
+**Key Talking Points Identified**:
+
+1. **Why Privacy is Essential**
+   - "Show your bank account to anyone on the street - that's blockchain today"
+   - Institutional adoption blocked without confidentiality
+   - HTTPS analogy: HTTP→HTTPS transition, same will happen for blockchain
+
+2. **Cryptography Trade-offs**
+   - ZK: Good for scaling/proofs, lacks composability
+   - MPC: Doesn't scale
+   - FHE: Computation on encrypted data, enables composability
+   - Zama uses all three: FHE for compute, MPC for decryption, ZK for integrity
+
+3. **Zama's Unique Value**
+   - Layer ON TOP of existing chains (not a new chain)
+   - No bridging - shield/unshield directly on Ethereum
+   - Preserves composability and liquidity
+   - Devs write Solidity, users use existing wallets
+
+4. **Trust Model**
+   - 13 reputable operators (Ledger, Fireblocks, etc.)
+   - 2/3 majority for decryption
+   - Hardware enclaves, geographic distribution
+   - Analogy: Internet DNS runs on 13 root servers too
+
+5. **Competitive Differentiation**
+   - Aztec: ZK L2, requires bridging, breaks composability
+   - Zcash: Requires buying different asset, no composability
+   - Zama: Native layer, same chain, full composability
+
+**Proposed Question Categories**:
+1. Why Privacy Matters (2-3 questions)
+2. Cryptography Trade-offs (2-3 questions)
+3. Zama Architecture Choices (2-3 questions)
+4. Competitive Landscape (1-2 questions)
+5. Business Applications (2-3 questions)
+
+### What To Do Next
+
+1. **Get user approval** on proposed question categories/structure
+2. **Draft 10-15 business value questions** for advanced quiz
+3. **Add to `src/data/questions.ts`** in a new section (maybe "Business & Value Proposition")
+4. **Update `advancedSections` export** to include new section
+5. **Test and commit**
+
+### Important Constraints
+- **DO NOT enable beginner mode in prod** without explicit user approval
+- Questions should teach non-crypto Zama devs WHY the protocol matters
+- Avoid overly technical answers - focus on business value and differentiation
+- All answer options should be similar length/detail level
+
+### Commands
+```bash
+cd /Users/eliastazartes/code/zama/zama-quiz-app
+npm run dev          # Dev server with beginner mode enabled via .env.local
+npm run build        # Prod build (beginner mode hidden)
+git push             # Auto-deploys to Netlify
+```
+
+### Git Status
+All changes from this session have been committed and pushed. Ready to start business value questions.
+
+---
+
+## Session 2: Business & Value Proposition Quiz Mode
+
+### What Was Done
+
+#### 1. **Created Business Quiz Mode (6 Questions)**
+
+Added a separate "Business" quiz mode with questions crafted collaboratively. Each question went through multiple drafts to ensure:
+- All answer options are plausible (no obvious wrong answers)
+- Questions teach insights, not just test trivia
+- Tone is educational, not marketing
+- Sources verified against transcript/whitepaper
+
+**Questions added (BV01-BV06):**
+
+| ID | Topic | Key Insight |
+|----|-------|-------------|
+| BV01 | Why privacy didn't exist | Tech wasn't ready (FHE too slow until recently) |
+| BV02 | ZK vs FHE | ZK proves statements; FHE computes on encrypted data |
+| BV03 | Trust assumptions | 13 operators, 9 to collude; L2Beat-style trust analysis |
+| BV04 | Institutional blocker | Transparent ledgers incompatible with finance |
+| BV05 | Programmable compliance | Recreate traditional finance model (you see, bank sees, neighbor doesn't) |
+| BV06 | HTTPS adoption pattern | Defaults, incentives, penalties, ecosystem lock-in |
+
+#### 2. **Three Quiz Modes Now Available**
+
+Updated app to support three separate quiz modes:
+- **Advanced** (default): 35 questions on internal architecture
+- **Beginner**: 18 questions on FHE basics
+- **Business**: 6 questions on value proposition
+
+**Files changed:**
+- `src/types/quiz.ts` - Added `'business'` to Difficulty type
+- `src/data/questions.ts` - Added businessSections export, 6 new questions with `difficulty: "business"`
+- `src/components/WelcomeScreen.tsx` - Refactored to show all 3 modes with config object
+- `src/components/Leaderboard.tsx` - Added Business tab (3 tabs total)
+- `src/App.tsx` - Updated modeLabel/modeColor for business mode
+- `src/components/Results.tsx` - Fixed sections for business mode
+
+#### 3. **"Suggest a Question" CTA**
+
+Added button on results page that opens a GitHub issue template for users to suggest new questions.
+
+**New file:** `src/components/SuggestQuestionButton.tsx`
+
+**To review suggestions:**
+```bash
+gh issue list --repo Eikix/zama-quiz --label question-suggestion
+gh issue view <issue-number> --repo Eikix/zama-quiz
+```
+
+### Question Crafting Guidelines Learned
+
+1. **All options must be plausible** - If one option says "should never be compromised" or is nonsensical, it's a giveaway
+2. **Test insights, not trivia** - "What's wrong with this statement?" > "What year did X happen?"
+3. **Use real quotes as inspiration** - Rand's talking points, but adapted for learning
+4. **Verify claims** - Checked whitepaper for "hundreds of nodes" claim before including
+5. **Avoid marketing tone** - Factual, not "Zama is great because..."
+6. **Consider audience** - Devs who may think 1 operator is fine; 13 is already distributed to them
+
+### Key Talking Points from Bankless Interview (Rand Hindi)
+
+**Direct quotes used:**
+- "Go to anyone on the street and ask them to show you their bank account. That's blockchain today."
+- "The only downside of ZK is that you cannot compute on the ZK proof. You cannot stake that proof."
+- "There are 13 companies responsible for this. So the internet runs on 13 companies... and it works."
+
+**Insights incorporated:**
+- Privacy was a tech constraint, not missing demand (SMS → Signal analogy)
+- ZK proofs are endpoints, not inputs for further computation
+- Trust assumptions aren't binary; L2Beat evaluates this seriously
+- Institutions blocked by transparency, not speed/cost
+- Programmable compliance = traditional finance model on-chain
+- HTTPS won through infrastructure defaults, not user demand
+
+### Supabase Leaderboard
+
+No schema changes needed. The `mode` column already exists (TEXT type) and accepts any value. Business quiz scores will work immediately with `mode: 'business'`.
+
+**If questions are added later:** Percentage-based ranking already handles different totals. No action needed unless strict version comparability is desired.
+
+### Commits Made
+
+1. `feat: add Business & Value Proposition quiz mode with 6 questions`
+2. `feat: add 'Suggest a Question' CTA on results page`
+
+### What To Do Next
+
+1. **Add more business questions** - Currently only 6, could expand to 10-15
+2. **Enable beginner mode in prod** - Still hidden behind env flag
+3. **Review user-submitted question suggestions** via GitHub issues
+4. **Consider question versioning** - If strict leaderboard comparability becomes important
+
+### Commands
+```bash
+cd /Users/eliastazartes/code/zama/zama-quiz-app
+npm run dev          # Dev server
+npm run build        # Prod build
+git push             # Auto-deploys to Netlify
+
+# Review question suggestions
+gh issue list --repo Eikix/zama-quiz --label question-suggestion
+```
