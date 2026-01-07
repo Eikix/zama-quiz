@@ -229,8 +229,8 @@ function App() {
     );
   }
 
-  const modeLabel = mode === 'beginner' ? 'Beginner' : 'Advanced';
-  const modeColor = mode === 'beginner' ? 'text-green-400 bg-green-600/20' : 'text-orange-400 bg-orange-600/20';
+  const modeLabel = mode === 'beginner' ? 'Beginner' : mode === 'business' ? 'Business' : 'Advanced';
+  const modeColor = mode === 'beginner' ? 'text-green-400 bg-green-600/20' : mode === 'business' ? 'text-blue-400 bg-blue-600/20' : 'text-orange-400 bg-orange-600/20';
 
   return (
     <div className="min-h-screen bg-stone-900 p-4 md:p-8">

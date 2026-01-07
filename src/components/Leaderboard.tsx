@@ -147,8 +147,18 @@ export function Leaderboard({ currentUserScore, highlightUsername, mode = 'advan
       {showTabs && (
         <div className="flex gap-2 mb-4 flex-shrink-0">
           <button
+            onClick={() => setActiveTab('advanced')}
+            className={`flex-1 py-2 px-2 rounded-lg text-xs font-medium transition-colors ${
+              activeTab === 'advanced'
+                ? 'bg-orange-600/30 text-orange-400 border border-orange-500/50'
+                : 'bg-stone-700/50 text-gray-400 hover:text-white'
+            }`}
+          >
+            🔥 Advanced
+          </button>
+          <button
             onClick={() => setActiveTab('beginner')}
-            className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-colors ${
+            className={`flex-1 py-2 px-2 rounded-lg text-xs font-medium transition-colors ${
               activeTab === 'beginner'
                 ? 'bg-green-600/30 text-green-400 border border-green-500/50'
                 : 'bg-stone-700/50 text-gray-400 hover:text-white'
@@ -157,14 +167,14 @@ export function Leaderboard({ currentUserScore, highlightUsername, mode = 'advan
             🌱 Beginner
           </button>
           <button
-            onClick={() => setActiveTab('advanced')}
-            className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-colors ${
-              activeTab === 'advanced'
-                ? 'bg-orange-600/30 text-orange-400 border border-orange-500/50'
+            onClick={() => setActiveTab('business')}
+            className={`flex-1 py-2 px-2 rounded-lg text-xs font-medium transition-colors ${
+              activeTab === 'business'
+                ? 'bg-blue-600/30 text-blue-400 border border-blue-500/50'
                 : 'bg-stone-700/50 text-gray-400 hover:text-white'
             }`}
           >
-            🔥 Advanced
+            💼 Business
           </button>
         </div>
       )}

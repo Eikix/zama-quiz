@@ -1064,6 +1064,125 @@ export const questions: Question[] = [
       retrievedAt: "2026-01-07"
     }
   },
+
+  // ============================================
+  // BUSINESS & VALUE PROPOSITION
+  // ============================================
+
+  {
+    id: "BV01",
+    difficulty: "business",
+    section: "Business & Value Proposition",
+    question: "Privacy on blockchain has been requested for years. Why didn't it exist until recently?",
+    options: [
+      "Regulators blocked privacy features to ensure transaction traceability",
+      "Users preferred transparency to verify that protocols weren't cheating them",
+      "The cryptography to compute on encrypted data wasn't practical yet",
+      "Privacy conflicted with the ethos of open-source, permissionless systems"
+    ],
+    correctAnswer: 2,
+    explanation: "Programmable blockchains require both verifiability (anyone can check the state is correct) and composability (contracts can interact with shared data). Traditional encryption breaks both. Techniques like Fully Homomorphic Encryption, which allow computation on encrypted data, existed in theory but were far too slow for real-world use. Only recent cryptographic breakthroughs made private yet composable smart contracts practical.",
+    source: {
+      type: "external",
+      reference: "Bankless interview with Rand Hindi (Zama founder)",
+      retrievedAt: "2026-01-07"
+    }
+  },
+  {
+    id: "BV02",
+    difficulty: "business",
+    section: "Business & Value Proposition",
+    question: "Both ZK proofs and FHE provide privacy. What's the key difference in what they enable?",
+    options: [
+      "ZK is faster but less secure; FHE is slower but quantum-resistant",
+      "ZK lets you prove statements without revealing data; FHE lets you compute on encrypted data",
+      "ZK works on-chain; FHE requires off-chain computation",
+      "ZK protects transaction privacy; FHE protects smart contract code"
+    ],
+    correctAnswer: 1,
+    explanation: "ZK proofs let you verify that something is true without seeing the underlying data; for example, proving you own 100 tokens without revealing your balance. FHE lets you actually compute on encrypted data and get an encrypted result. Both are useful: ZK is great for verification and scaling, FHE is necessary when you need ongoing computation on private state. Many protocols use both; Zama uses FHE for computation, MPC for decryption, and ZK for input verification.",
+    source: {
+      type: "external",
+      reference: "Bankless interview with Rand Hindi (Zama founder)",
+      retrievedAt: "2026-01-07"
+    }
+  },
+  {
+    id: "BV03",
+    difficulty: "business",
+    section: "Business & Value Proposition",
+    question: "As of early 2026, Zama's decryption key is split across 13 operators, requiring 9 to collude before they could decrypt user data. Why distribute trust this way instead of using a single secure server?",
+    options: [
+      "Distributed systems are faster due to parallel processing",
+      "No single party can be coerced, hacked, or go rogue; an attacker must compromise multiple independent entities",
+      "Regulatory requirements mandate geographic distribution of cryptographic keys",
+      "It reduces infrastructure costs by sharing the computational load"
+    ],
+    correctAnswer: 1,
+    explanation: "A single operator, no matter how secure, is a single point of failure; they can be hacked, coerced by a government, or turn malicious. Distributing the key across 13 reputable, geographically spread operators means an attacker must compromise 9 independent entities simultaneously. In crypto, trust assumptions are taken seriously; sites like L2Beat analyze and rank protocols based on how much users must trust various parties. Blockchain protocols derive value from verifiability, permissionlessness, and resilience. As a protocol aiming for state-of-the-art security, Zama distributes trust to minimize single points of failure, with plans to eventually scale to hundreds of nodes.",
+    source: {
+      type: "external",
+      reference: "Bankless interview with Rand Hindi (Zama founder); fhevm-whitepaper.pdf",
+      retrievedAt: "2026-01-07"
+    }
+  },
+  {
+    id: "BV04",
+    difficulty: "business",
+    section: "Business & Value Proposition",
+    question: "Banks and asset managers have been slow to adopt public blockchains despite the efficiency gains. What's the main blocker?",
+    options: [
+      "Transaction throughput can't match traditional financial infrastructure",
+      "Smart contract bugs pose unacceptable risk for large asset pools",
+      "Anyone can see balances and transaction history on a public ledger",
+      "Regulatory uncertainty around token classification"
+    ],
+    correctAnswer: 2,
+    explanation: "Would you use a bank where anyone on the street could look up your balance and see every transaction you've made? That's public blockchain today. Institutions face the same problem at scale: exposing trading strategies, client holdings, and corporate treasury movements to competitors and the public. It's not about speed or cost; transparent ledgers are simply incompatible with how finance operates. Confidentiality is the unlock.",
+    source: {
+      type: "external",
+      reference: "Bankless interview with Rand Hindi (Zama founder)",
+      retrievedAt: "2026-01-07"
+    }
+  },
+  {
+    id: "BV05",
+    difficulty: "business",
+    section: "Business & Value Proposition",
+    question: "Developers of privacy tools like Tornado Cash have faced legal prosecution. How can privacy protocols navigate this regulatory risk?",
+    options: [
+      "Operate from jurisdictions without extradition treaties",
+      "Make privacy optional so users bear responsibility for how they use it",
+      "Allow token issuers to program who can see encrypted data, recreating traditional finance's compliance model",
+      "Limit privacy features to small transaction amounts that fall below reporting thresholds"
+    ],
+    correctAnswer: 2,
+    explanation: "Traditional finance isn't fully private or fully transparent; you can see your bank account, your bank can see it too, but your neighbor can't. Programmable compliance recreates this model on-chain. A stablecoin issuer can grant themselves visibility into their token's activity while keeping it confidential from the public. This lets regulated entities meet their obligations without sacrificing user privacy. The protocol provides the tools; how compliance is implemented is up to each application.",
+    source: {
+      type: "external",
+      reference: "Bankless interview with Rand Hindi (Zama founder)",
+      retrievedAt: "2026-01-07"
+    }
+  },
+  {
+    id: "BV06",
+    difficulty: "business",
+    section: "Business & Value Proposition",
+    question: "HTTPS became the web's default not because users demanded encryption. What actually drove adoption?",
+    options: [
+      "Regulations required encryption for websites handling personal data",
+      "Security breaches made users distrust sites without the padlock icon",
+      "Browsers penalized HTTP, platforms enforced HTTPS, and free tooling removed friction",
+      "Faster TLS hardware made encryption cheap enough for every website"
+    ],
+    correctAnswer: 2,
+    explanation: "Users never demanded HTTPS; most didn't understand what it did. Adoption happened because browsers flagged HTTP as \"not secure,\" Google ranked HTTPS sites higher, and Let's Encrypt made certificates free and automatic. The pattern was: defaults, incentives, penalties, then ecosystem lock-in. Blockchain privacy will likely follow the same path. It won't win because users demand it; it'll win when tooling makes confidentiality the default and non-private options feel broken.",
+    source: {
+      type: "external",
+      reference: "Bankless interview with Rand Hindi (Zama founder)",
+      retrievedAt: "2026-01-07"
+    }
+  },
 ];
 
 export const beginnerSections = [
@@ -1081,4 +1200,8 @@ export const advancedSections = [
   "Decryption Mechanisms",
   "Service Interactions",
   "Advanced Concepts"
+];
+
+export const businessSections = [
+  "Business & Value Proposition"
 ];

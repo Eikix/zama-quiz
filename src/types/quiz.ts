@@ -1,4 +1,4 @@
-export type Difficulty = 'beginner' | 'advanced';
+export type Difficulty = 'beginner' | 'advanced' | 'business';
 
 export interface QuestionSource {
   type: 'docs' | 'code' | 'whitepaper' | 'paper' | 'external';

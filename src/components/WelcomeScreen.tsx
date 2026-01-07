@@ -1,20 +1,45 @@
 import { useState } from 'react';
-import { questions, beginnerSections, advancedSections } from '../data/questions';
+import { questions, beginnerSections, advancedSections, businessSections } from '../data/questions';
 import type { Difficulty } from '../types/quiz';
 
 interface WelcomeScreenProps {
   onStart: (difficulty: Difficulty) => void;
 }
 
-const BEGINNER_MODE_ENABLED = import.meta.env.VITE_ENABLE_BEGINNER_MODE === 'true';
+const modeConfig: Record<Difficulty, { label: string; description: string; color: string; borderColor: string; bgColor: string; sections: string[] }> = {
+  advanced: {
+    label: 'Advanced',
+    description: 'Internal architecture, implementation details, benchmarks',
+    color: 'text-orange-400',
+    borderColor: 'border-orange-500',
+    bgColor: 'bg-orange-900/30',
+    sections: advancedSections
+  },
+  beginner: {
+    label: 'Beginner',
+    description: 'FHE concepts, fhEVM basics, developer mental model',
+    color: 'text-green-400',
+    borderColor: 'border-green-500',
+    bgColor: 'bg-green-900/30',
+    sections: beginnerSections
+  },
+  business: {
+    label: 'Business',
+    description: 'Value proposition, trust assumptions, adoption drivers',
+    color: 'text-blue-400',
+    borderColor: 'border-blue-500',
+    bgColor: 'bg-blue-900/30',
+    sections: businessSections
+  }
+};
+
+const modeOrder: Difficulty[] = ['advanced', 'beginner', 'business'];
 
 export function WelcomeScreen({ onStart }: WelcomeScreenProps) {
   const [selectedMode, setSelectedMode] = useState<Difficulty>('advanced');
   
-  const beginnerCount = questions.filter(q => q.difficulty === 'beginner').length;
-  const advancedCount = questions.filter(q => q.difficulty === 'advanced').length;
-  const questionCount = selectedMode === 'beginner' ? beginnerCount : advancedCount;
-  const sections = selectedMode === 'beginner' ? beginnerSections : advancedSections;
+  const questionCount = questions.filter(q => q.difficulty === selectedMode).length;
+  const sections = modeConfig[selectedMode].sections;
 
   return (
     <div className="bg-stone-800 rounded-2xl p-8 shadow-xl border border-stone-700 text-center">
@@ -34,54 +59,40 @@ export function WelcomeScreen({ onStart }: WelcomeScreenProps) {
         <p className="text-gray-400">Test your FHE and fhEVM knowledge</p>
       </div>
 
-      {BEGINNER_MODE_ENABLED && (
-        <div className="mb-6">
-          <h3 className="text-white font-semibold mb-3 text-left">Select Difficulty</h3>
-          <div className="grid grid-cols-2 gap-3">
-            <button
-              onClick={() => setSelectedMode('beginner')}
-              className={`p-4 rounded-xl border-2 transition-all text-left ${
-                selectedMode === 'beginner'
-                  ? 'border-green-500 bg-green-900/30'
-                  : 'border-stone-600 bg-stone-700/50 hover:border-stone-500'
-              }`}
-            >
-              <div className="flex items-center gap-2 mb-1">
-                <span className={`font-semibold ${selectedMode === 'beginner' ? 'text-green-400' : 'text-white'}`}>
-                  Beginner
-                </span>
-              </div>
-              <p className="text-xs text-gray-400">
-                FHE concepts, fhEVM basics, developer mental model
-              </p>
-              <p className="text-xs text-gray-500 mt-1">
-                {beginnerCount} questions
-              </p>
-            </button>
+      <div className="mb-6">
+        <h3 className="text-white font-semibold mb-3 text-left">Select Mode</h3>
+        <div className="grid grid-cols-3 gap-2">
+          {modeOrder.map((mode) => {
+            const config = modeConfig[mode];
+            const count = questions.filter(q => q.difficulty === mode).length;
+            const isSelected = selectedMode === mode;
             
-            <button
-              onClick={() => setSelectedMode('advanced')}
-              className={`p-4 rounded-xl border-2 transition-all text-left ${
-                selectedMode === 'advanced'
-                  ? 'border-orange-500 bg-orange-900/30'
-                  : 'border-stone-600 bg-stone-700/50 hover:border-stone-500'
-              }`}
-            >
-              <div className="flex items-center gap-2 mb-1">
-                <span className={`font-semibold ${selectedMode === 'advanced' ? 'text-orange-400' : 'text-white'}`}>
-                  Advanced
-                </span>
-              </div>
-              <p className="text-xs text-gray-400">
-                Internal architecture, implementation details, benchmarks
-              </p>
-              <p className="text-xs text-gray-500 mt-1">
-                {advancedCount} questions
-              </p>
-            </button>
-          </div>
+            return (
+              <button
+                key={mode}
+                onClick={() => setSelectedMode(mode)}
+                className={`p-3 rounded-xl border-2 transition-all text-left ${
+                  isSelected
+                    ? `${config.borderColor} ${config.bgColor}`
+                    : 'border-stone-600 bg-stone-700/50 hover:border-stone-500'
+                }`}
+              >
+                <div className="flex items-center gap-1 mb-1">
+                  <span className={`font-semibold text-sm ${isSelected ? config.color : 'text-white'}`}>
+                    {config.label}
+                  </span>
+                </div>
+                <p className="text-xs text-gray-400 line-clamp-2">
+                  {config.description}
+                </p>
+                <p className="text-xs text-gray-500 mt-1">
+                  {count} questions
+                </p>
+              </button>
+            );
+          })}
         </div>
-      )}
+      </div>
 
       <div className="grid grid-cols-2 gap-4 mb-6 text-left">
         <div className="bg-stone-700/50 rounded-xl p-4">
@@ -99,7 +110,10 @@ export function WelcomeScreen({ onStart }: WelcomeScreenProps) {
         <ul className="space-y-2">
           {sections.map((topic, i) => (
             <li key={i} className="flex items-center gap-2 text-gray-300 text-sm">
-              <span className={`w-1.5 h-1.5 rounded-full ${selectedMode === 'beginner' ? 'bg-green-500' : 'bg-orange-500'}`}></span>
+              <span className={`w-1.5 h-1.5 rounded-full ${
+                selectedMode === 'beginner' ? 'bg-green-500' : 
+                selectedMode === 'business' ? 'bg-blue-500' : 'bg-orange-500'
+              }`}></span>
               {topic}
             </li>
           ))}
@@ -107,14 +121,16 @@ export function WelcomeScreen({ onStart }: WelcomeScreenProps) {
       </div>
 
       <button
-        onClick={() => onStart(BEGINNER_MODE_ENABLED ? selectedMode : 'advanced')}
+        onClick={() => onStart(selectedMode)}
         className={`w-full px-6 py-4 rounded-xl font-semibold transition-all duration-200 text-white hover:scale-[1.02] ${
-          selectedMode === 'beginner' && BEGINNER_MODE_ENABLED
+          selectedMode === 'beginner'
             ? 'bg-gradient-to-r from-green-600 to-green-500 hover:from-green-500 hover:to-green-400'
+            : selectedMode === 'business'
+            ? 'bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400'
             : 'bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-400 hover:to-amber-400'
         }`}
       >
-        {BEGINNER_MODE_ENABLED ? `Start ${selectedMode === 'beginner' ? 'Beginner' : 'Advanced'} Quiz` : 'Start Quiz'}
+        Start {modeConfig[selectedMode].label} Quiz
       </button>
     </div>
   );
