@@ -400,6 +400,19 @@ export const questions: Question[] = [
     correctAnswer: 3,
     explanation: "Bitwise operations (AND/OR) are the fastest at ~19-23ms on CPU and ~3-4ms on GPU for euint64. This is because they don't require Programmable Bootstrapping, unlike arithmetic operations which are significantly slower."
   },
+  {
+    id: 31,
+    section: "Data Flow & Encryption",
+    question: "When a user calls FHE.add(handleA, handleB) on the Host Chain, what does the FHEVMExecutor contract return?",
+    options: [
+      "A result handle derived from hashing the inputs and operation type",
+      "A pending request ID to query the Coprocessor for the result",
+      "A transaction hash to poll for completion",
+      "Nothing until the Coprocessor signals completion via callback"
+    ],
+    correctAnswer: 0,
+    explanation: "The Host Chain performs 'symbolic execution' - it only manipulates handles, never ciphertexts. The result handle is deterministically derived as hash(op_type, input_handles, chain_id) || result_type, allowing it to be returned immediately. The actual FHE computation happens asynchronously in the Coprocessor."
+  },
 ];
 
 export const sections = [
