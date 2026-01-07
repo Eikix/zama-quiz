@@ -68,20 +68,20 @@ function loadSavedState(): SavedState | null {
         return state;
       }
     }
-  } catch {}
+  } catch { /* localStorage unavailable or corrupted state - ignore */ }
   return null;
 }
 
 function saveState(state: SavedState) {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  } catch {}
+  } catch { /* localStorage unavailable - ignore */ }
 }
 
 function clearSavedState() {
   try {
     localStorage.removeItem(STORAGE_KEY);
-  } catch {}
+  } catch { /* localStorage unavailable - ignore */ }
 }
 
 function App() {

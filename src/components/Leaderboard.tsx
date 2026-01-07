@@ -16,16 +16,22 @@ export function Leaderboard({ currentUserScore, highlightUsername }: Leaderboard
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    let cancelled = false;
+    
+    async function loadInitial() {
+      setLoading(true);
+      const { entries: data, hasMore: more } = await getLeaderboard(PAGE_SIZE, 0);
+      if (!cancelled) {
+        setEntries(data);
+        setHasMore(more);
+        setLoading(false);
+      }
+    }
+    
     loadInitial();
+    
+    return () => { cancelled = true; };
   }, []);
-
-  async function loadInitial() {
-    setLoading(true);
-    const { entries: data, hasMore: more } = await getLeaderboard(PAGE_SIZE, 0);
-    setEntries(data);
-    setHasMore(more);
-    setLoading(false);
-  }
 
   const loadMore = useCallback(async () => {
     if (loadingMore || !hasMore) return;
