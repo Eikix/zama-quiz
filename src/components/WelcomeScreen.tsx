@@ -7,7 +7,7 @@ interface WelcomeScreenProps {
 }
 
 export function WelcomeScreen({ onStart }: WelcomeScreenProps) {
-  const [selectedMode, setSelectedMode] = useState<Difficulty>('beginner');
+  const [selectedMode, setSelectedMode] = useState<Difficulty>('advanced');
   
   const beginnerCount = questions.filter(q => q.difficulty === 'beginner').length;
   const advancedCount = questions.filter(q => q.difficulty === 'advanced').length;
