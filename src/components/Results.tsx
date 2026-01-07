@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { ShuffledQuestion, SectionScore } from '../types/quiz';
+import type { ShuffledQuestion, SectionScore, Difficulty } from '../types/quiz';
 import { sections } from '../data/questions';
 import { SubmitScore } from './SubmitScore';
 import { Leaderboard } from './Leaderboard';
@@ -7,11 +7,12 @@ import { Leaderboard } from './Leaderboard';
 interface ResultsProps {
   questions: ShuffledQuestion[];
   answers: (number | null)[];
+  mode: Difficulty;
   onRestart: () => void;
   onReview: () => void;
 }
 
-export function Results({ questions, answers, onRestart, onReview }: ResultsProps) {
+export function Results({ questions, answers, mode, onRestart, onReview }: ResultsProps) {
   const [submittedUsername, setSubmittedUsername] = useState<string | null>(null);
   
   const correctCount = answers.reduce<number>((acc, answer, index) => {
@@ -84,12 +85,14 @@ export function Results({ questions, answers, onRestart, onReview }: ResultsProp
           <SubmitScore
             score={correctCount}
             total={questions.length}
+            mode={mode}
             onSubmitted={setSubmittedUsername}
           />
         ) : (
           <Leaderboard
             currentUserScore={{ score: correctCount, total: questions.length }}
             highlightUsername={submittedUsername}
+            mode={mode}
           />
         )}
       </div>

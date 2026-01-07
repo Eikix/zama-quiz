@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import type { Difficulty } from '../types/quiz';
 
 const supabaseUrl = 'https://jsiwryphisanlinymmgx.supabase.co';
 const supabaseAnonKey = 'sb_publishable_pHL3xVqNYbBa_NhB0HrPgw_bZUgIz3n';
@@ -11,23 +12,25 @@ export interface LeaderboardEntry {
   score: number;
   total: number;
   percentage: number;
+  mode: Difficulty;
   created_at: string;
 }
 
-export async function submitScore(username: string, score: number, total: number): Promise<boolean> {
+export async function submitScore(username: string, score: number, total: number, mode: Difficulty): Promise<boolean> {
   const percentage = Math.round((score / total) * 10000) / 100;
   
   const { error } = await supabase
     .from('leaderboard')
-    .insert({ username, score, total, percentage });
+    .insert({ username, score, total, percentage, mode });
   
   return !error;
 }
 
-export async function getLeaderboard(limit = 20, offset = 0): Promise<{ entries: LeaderboardEntry[]; hasMore: boolean }> {
+export async function getLeaderboard(limit = 20, offset = 0, mode: Difficulty = 'advanced'): Promise<{ entries: LeaderboardEntry[]; hasMore: boolean }> {
   const { data, error } = await supabase
     .from('leaderboard')
     .select('*')
+    .eq('mode', mode)
     .order('percentage', { ascending: false })
     .order('created_at', { ascending: true })
     .range(offset, offset + limit - 1);

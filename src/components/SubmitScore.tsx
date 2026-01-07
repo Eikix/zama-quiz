@@ -1,13 +1,15 @@
 import { useState } from 'react';
 import { submitScore } from '../lib/supabase';
+import type { Difficulty } from '../types/quiz';
 
 interface SubmitScoreProps {
   score: number;
   total: number;
+  mode: Difficulty;
   onSubmitted: (username: string) => void;
 }
 
-export function SubmitScore({ score, total, onSubmitted }: SubmitScoreProps) {
+export function SubmitScore({ score, total, mode, onSubmitted }: SubmitScoreProps) {
   const [username, setUsername] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
@@ -34,7 +36,7 @@ export function SubmitScore({ score, total, onSubmitted }: SubmitScoreProps) {
     setSubmitting(true);
     setError('');
     
-    const success = await submitScore(trimmedName, score, total);
+    const success = await submitScore(trimmedName, score, total, mode);
     
     if (success) {
       onSubmitted(trimmedName);

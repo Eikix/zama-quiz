@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useMemo } from 'react';
-import { questions as originalQuestions } from './data/questions';
+import { questions as allQuestions } from './data/questions';
 import { WelcomeScreen } from './components/WelcomeScreen';
 import { QuestionCard } from './components/QuestionCard';
 import { ProgressBar } from './components/ProgressBar';
@@ -7,7 +7,7 @@ import { NavigationButtons } from './components/NavigationButtons';
 import { QuestionNav } from './components/QuestionNav';
 import { Results } from './components/Results';
 import { Leaderboard } from './components/Leaderboard';
-import type { ShuffledQuestion } from './types/quiz';
+import type { ShuffledQuestion, Difficulty } from './types/quiz';
 
 type Screen = 'welcome' | 'quiz' | 'results';
 
@@ -16,7 +16,7 @@ const STORAGE_KEY = 'zama-quiz-state';
 function LeaderboardModal({ onClose }: { onClose: () => void }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm" onClick={onClose}>
-      <div className="relative w-full max-w-md max-h-[80vh] overflow-y-auto bg-stone-800 rounded-2xl shadow-2xl border border-stone-700" onClick={e => e.stopPropagation()}>
+      <div className="relative w-full max-w-md max-h-[80vh] overflow-hidden bg-stone-800 rounded-2xl shadow-2xl border border-stone-700" onClick={e => e.stopPropagation()}>
         <button 
           onClick={onClose}
           className="absolute top-4 right-4 p-2 text-gray-400 hover:text-white transition-colors z-10"
@@ -27,7 +27,7 @@ function LeaderboardModal({ onClose }: { onClose: () => void }) {
           </svg>
         </button>
         <div className="p-2">
-           <Leaderboard />
+           <Leaderboard showTabs />
         </div>
       </div>
     </div>
@@ -41,6 +41,7 @@ interface SavedState {
   reviewMode: boolean;
   questionOrder: number[];
   optionOrders: number[][];
+  mode: Difficulty;
 }
 
 function shuffle<T>(array: T[]): T[] {
@@ -52,9 +53,9 @@ function shuffle<T>(array: T[]): T[] {
   return result;
 }
 
-function generateShuffleState(): { questionOrder: number[]; optionOrders: number[][] } {
-  const questionOrder = shuffle(originalQuestions.map((_, i) => i));
-  const optionOrders = originalQuestions.map(q => shuffle(q.options.map((_, i) => i)));
+function generateShuffleState(questions: typeof allQuestions): { questionOrder: number[]; optionOrders: number[][] } {
+  const questionOrder = shuffle(questions.map((_, i) => i));
+  const optionOrders = questions.map(q => shuffle(q.options.map((_, i) => i)));
   return { questionOrder, optionOrders };
 }
 
@@ -63,8 +64,9 @@ function loadSavedState(): SavedState | null {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
       const state = JSON.parse(saved) as SavedState;
-      if (state.answers.length === originalQuestions.length && 
-          state.questionOrder?.length === originalQuestions.length) {
+      const filteredQuestions = allQuestions.filter(q => q.difficulty === state.mode);
+      if (state.answers.length === filteredQuestions.length && 
+          state.questionOrder?.length === filteredQuestions.length) {
         return state;
       }
     }
@@ -86,14 +88,21 @@ function clearSavedState() {
 
 function App() {
   const savedState = loadSavedState();
+  const [mode, setMode] = useState<Difficulty>(savedState?.mode ?? 'beginner');
+  
+  const filteredQuestions = useMemo(() => 
+    allQuestions.filter(q => q.difficulty === mode),
+    [mode]
+  );
+  
   const initialShuffle = savedState?.questionOrder 
     ? { questionOrder: savedState.questionOrder, optionOrders: savedState.optionOrders }
-    : generateShuffleState();
+    : generateShuffleState(filteredQuestions);
   
   const [screen, setScreen] = useState<Screen>(savedState?.screen ?? 'welcome');
   const [currentQuestion, setCurrentQuestion] = useState(savedState?.currentQuestion ?? 0);
   const [answers, setAnswers] = useState<(number | null)[]>(
-    savedState?.answers ?? Array(originalQuestions.length).fill(null)
+    savedState?.answers ?? Array(filteredQuestions.length).fill(null)
   );
   const [showExplanation, setShowExplanation] = useState(savedState?.reviewMode ?? false);
   const [reviewMode, setReviewMode] = useState(savedState?.reviewMode ?? false);
@@ -103,7 +112,8 @@ function App() {
 
   const shuffledQuestions: ShuffledQuestion[] = useMemo(() => {
     return questionOrder.map(originalIndex => {
-      const q = originalQuestions[originalIndex];
+      const q = filteredQuestions[originalIndex];
+      if (!q) return null;
       const optionOrder = optionOrders[originalIndex];
       return {
         ...q,
@@ -111,32 +121,32 @@ function App() {
         shuffledCorrectAnswer: optionOrder.indexOf(q.correctAnswer),
         optionMapping: optionOrder,
       };
-    });
-  }, [questionOrder, optionOrders]);
+    }).filter((q): q is ShuffledQuestion => q !== null);
+  }, [questionOrder, optionOrders, filteredQuestions]);
 
   useEffect(() => {
-    saveState({ screen, currentQuestion, answers, reviewMode, questionOrder, optionOrders });
-  }, [screen, currentQuestion, answers, reviewMode, questionOrder, optionOrders]);
+    saveState({ screen, currentQuestion, answers, reviewMode, questionOrder, optionOrders, mode });
+  }, [screen, currentQuestion, answers, reviewMode, questionOrder, optionOrders, mode]);
 
-  const handleStart = useCallback(() => {
-    const newShuffle = generateShuffleState();
+  const handleStart = useCallback((selectedMode: Difficulty) => {
+    setMode(selectedMode);
+    const questions = allQuestions.filter(q => q.difficulty === selectedMode);
+    const newShuffle = generateShuffleState(questions);
     setQuestionOrder(newShuffle.questionOrder);
     setOptionOrders(newShuffle.optionOrders);
     setScreen('quiz');
     setCurrentQuestion(0);
-    setAnswers(Array(originalQuestions.length).fill(null));
+    setAnswers(Array(questions.length).fill(null));
     setShowExplanation(false);
     setReviewMode(false);
   }, []);
 
   const handleReset = useCallback(() => {
     clearSavedState();
-    const newShuffle = generateShuffleState();
-    setQuestionOrder(newShuffle.questionOrder);
-    setOptionOrders(newShuffle.optionOrders);
+    setMode('beginner');
     setScreen('welcome');
     setCurrentQuestion(0);
-    setAnswers(Array(originalQuestions.length).fill(null));
+    setAnswers([]);
     setShowExplanation(false);
     setReviewMode(false);
   }, []);
@@ -188,8 +198,8 @@ function App() {
   }, []);
 
   const handleRestart = useCallback(() => {
-    handleStart();
-  }, [handleStart]);
+    handleStart(mode);
+  }, [handleStart, mode]);
 
   const answeredCount = answers.filter(a => a !== null).length;
 
@@ -210,6 +220,7 @@ function App() {
           <Results 
             questions={shuffledQuestions}
             answers={answers}
+            mode={mode}
             onRestart={handleRestart}
             onReview={handleReview}
           />
@@ -217,6 +228,9 @@ function App() {
       </div>
     );
   }
+
+  const modeLabel = mode === 'beginner' ? 'Beginner' : 'Advanced';
+  const modeColor = mode === 'beginner' ? 'text-green-400 bg-green-600/20' : 'text-orange-400 bg-orange-600/20';
 
   return (
     <div className="min-h-screen bg-stone-900 p-4 md:p-8">
@@ -240,7 +254,12 @@ function App() {
                 <span className="text-sm font-medium hidden lg:inline">Leaderboard</span>
               </button>
             </div>
-            <h1 className="text-xl sm:text-2xl font-bold text-white text-center flex-1">Zama Protocol Quiz</h1>
+            <div className="flex-1 text-center">
+              <h1 className="text-xl sm:text-2xl font-bold text-white">Zama Protocol Quiz</h1>
+              <span className={`inline-block px-2 py-0.5 text-xs rounded-full mt-1 ${modeColor}`}>
+                {modeLabel}
+              </span>
+            </div>
             <div className="w-20 flex justify-end">
               <button
                 onClick={handleReset}
