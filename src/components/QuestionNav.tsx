@@ -3,7 +3,6 @@ interface QuestionNavProps {
   currentQuestion: number;
   answers: (number | null)[];
   correctAnswers: number[];
-  showResults: boolean;
   reviewMode: boolean;
   onSelectQuestion: (index: number) => void;
 }
@@ -13,7 +12,6 @@ export function QuestionNav({
   currentQuestion, 
   answers, 
   correctAnswers,
-  showResults,
   reviewMode,
   onSelectQuestion 
 }: QuestionNavProps) {
@@ -24,11 +22,9 @@ export function QuestionNav({
         {Array.from({ length: totalQuestions }, (_, i) => {
           const isAnswered = answers[i] !== null;
           const isCurrent = i === currentQuestion;
-          const isCorrect = showResults && answers[i] === correctAnswers[i];
-          const isWrong = showResults && isAnswered && answers[i] !== correctAnswers[i];
+          const isCorrect = isAnswered && answers[i] === correctAnswers[i];
+          const isWrong = isAnswered && answers[i] !== correctAnswers[i];
           
-          // In quiz mode, can only navigate to unanswered questions
-          // In review mode, can navigate anywhere
           const isClickable = reviewMode || !isAnswered || isCurrent;
 
           let buttonClass = "w-full aspect-square rounded-lg text-sm font-medium transition-all duration-200 ";
@@ -37,16 +33,13 @@ export function QuestionNav({
             buttonClass += "ring-2 ring-orange-500 ring-offset-2 ring-offset-stone-800 ";
           }
 
-          if (showResults) {
-            if (isCorrect) {
-              buttonClass += "bg-green-600 text-white";
-            } else if (isWrong) {
-              buttonClass += "bg-red-600 text-white";
-            } else {
-              buttonClass += "bg-stone-700 text-gray-400";
+          if (isCorrect) {
+            buttonClass += "bg-green-600 text-white";
+            if (!reviewMode && !isCurrent) {
+              buttonClass += " cursor-not-allowed";
             }
-          } else if (isAnswered) {
-            buttonClass += "bg-orange-500 text-white";
+          } else if (isWrong) {
+            buttonClass += "bg-red-600 text-white";
             if (!reviewMode && !isCurrent) {
               buttonClass += " cursor-not-allowed";
             }

@@ -1,12 +1,20 @@
-import { questions, advancedSections } from '../data/questions';
+import { useState } from 'react';
+import { questions, beginnerSections, advancedSections } from '../data/questions';
 import type { Difficulty } from '../types/quiz';
 
 interface WelcomeScreenProps {
   onStart: (difficulty: Difficulty) => void;
 }
 
+const BEGINNER_MODE_ENABLED = import.meta.env.VITE_ENABLE_BEGINNER_MODE === 'true';
+
 export function WelcomeScreen({ onStart }: WelcomeScreenProps) {
+  const [selectedMode, setSelectedMode] = useState<Difficulty>('advanced');
+  
+  const beginnerCount = questions.filter(q => q.difficulty === 'beginner').length;
   const advancedCount = questions.filter(q => q.difficulty === 'advanced').length;
+  const questionCount = selectedMode === 'beginner' ? beginnerCount : advancedCount;
+  const sections = selectedMode === 'beginner' ? beginnerSections : advancedSections;
 
   return (
     <div className="bg-stone-800 rounded-2xl p-8 shadow-xl border border-stone-700 text-center">
@@ -26,13 +34,62 @@ export function WelcomeScreen({ onStart }: WelcomeScreenProps) {
         <p className="text-gray-400">Test your FHE and fhEVM knowledge</p>
       </div>
 
+      {BEGINNER_MODE_ENABLED && (
+        <div className="mb-6">
+          <h3 className="text-white font-semibold mb-3 text-left">Select Difficulty</h3>
+          <div className="grid grid-cols-2 gap-3">
+            <button
+              onClick={() => setSelectedMode('beginner')}
+              className={`p-4 rounded-xl border-2 transition-all text-left ${
+                selectedMode === 'beginner'
+                  ? 'border-green-500 bg-green-900/30'
+                  : 'border-stone-600 bg-stone-700/50 hover:border-stone-500'
+              }`}
+            >
+              <div className="flex items-center gap-2 mb-1">
+                <span className={`font-semibold ${selectedMode === 'beginner' ? 'text-green-400' : 'text-white'}`}>
+                  Beginner
+                </span>
+              </div>
+              <p className="text-xs text-gray-400">
+                FHE concepts, fhEVM basics, developer mental model
+              </p>
+              <p className="text-xs text-gray-500 mt-1">
+                {beginnerCount} questions
+              </p>
+            </button>
+            
+            <button
+              onClick={() => setSelectedMode('advanced')}
+              className={`p-4 rounded-xl border-2 transition-all text-left ${
+                selectedMode === 'advanced'
+                  ? 'border-orange-500 bg-orange-900/30'
+                  : 'border-stone-600 bg-stone-700/50 hover:border-stone-500'
+              }`}
+            >
+              <div className="flex items-center gap-2 mb-1">
+                <span className={`font-semibold ${selectedMode === 'advanced' ? 'text-orange-400' : 'text-white'}`}>
+                  Advanced
+                </span>
+              </div>
+              <p className="text-xs text-gray-400">
+                Internal architecture, implementation details, benchmarks
+              </p>
+              <p className="text-xs text-gray-500 mt-1">
+                {advancedCount} questions
+              </p>
+            </button>
+          </div>
+        </div>
+      )}
+
       <div className="grid grid-cols-2 gap-4 mb-6 text-left">
         <div className="bg-stone-700/50 rounded-xl p-4">
-          <div className="text-2xl font-bold text-orange-400">{advancedCount}</div>
+          <div className="text-2xl font-bold text-orange-400">{questionCount}</div>
           <div className="text-sm text-gray-400">Questions</div>
         </div>
         <div className="bg-stone-700/50 rounded-xl p-4">
-          <div className="text-2xl font-bold text-amber-400">{advancedSections.length}</div>
+          <div className="text-2xl font-bold text-amber-400">{sections.length}</div>
           <div className="text-sm text-gray-400">Sections</div>
         </div>
       </div>
@@ -40,9 +97,9 @@ export function WelcomeScreen({ onStart }: WelcomeScreenProps) {
       <div className="mb-6 text-left">
         <h3 className="text-white font-semibold mb-3">Topics Covered</h3>
         <ul className="space-y-2">
-          {advancedSections.map((topic, i) => (
+          {sections.map((topic, i) => (
             <li key={i} className="flex items-center gap-2 text-gray-300 text-sm">
-              <span className="w-1.5 h-1.5 rounded-full bg-orange-500"></span>
+              <span className={`w-1.5 h-1.5 rounded-full ${selectedMode === 'beginner' ? 'bg-green-500' : 'bg-orange-500'}`}></span>
               {topic}
             </li>
           ))}
@@ -50,10 +107,14 @@ export function WelcomeScreen({ onStart }: WelcomeScreenProps) {
       </div>
 
       <button
-        onClick={() => onStart('advanced')}
-        className="w-full px-6 py-4 rounded-xl font-semibold transition-all duration-200 bg-gradient-to-r from-orange-500 to-amber-500 text-white hover:from-orange-400 hover:to-amber-400 hover:scale-[1.02]"
+        onClick={() => onStart(BEGINNER_MODE_ENABLED ? selectedMode : 'advanced')}
+        className={`w-full px-6 py-4 rounded-xl font-semibold transition-all duration-200 text-white hover:scale-[1.02] ${
+          selectedMode === 'beginner' && BEGINNER_MODE_ENABLED
+            ? 'bg-gradient-to-r from-green-600 to-green-500 hover:from-green-500 hover:to-green-400'
+            : 'bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-400 hover:to-amber-400'
+        }`}
       >
-        Start Quiz
+        {BEGINNER_MODE_ENABLED ? `Start ${selectedMode === 'beginner' ? 'Beginner' : 'Advanced'} Quiz` : 'Start Quiz'}
       </button>
     </div>
   );

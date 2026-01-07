@@ -300,9 +300,11 @@ function App() {
               hasAnswered={answers[currentQuestion] !== null}
               showExplanation={showExplanation}
               reviewMode={reviewMode}
+              answers={answers}
               onPrevious={handlePrevious}
               onNext={handleNext}
               onFinish={handleFinish}
+              onGoToQuestion={handleSelectQuestion}
             />
           </div>
 
@@ -312,7 +314,6 @@ function App() {
               currentQuestion={currentQuestion}
               answers={answers}
               correctAnswers={shuffledQuestions.map(q => q.shuffledCorrectAnswer)}
-              showResults={reviewMode}
               reviewMode={reviewMode}
               onSelectQuestion={handleSelectQuestion}
             />

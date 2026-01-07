@@ -91,12 +91,12 @@ export const questions: Question[] = [
     question: "What does 'bootstrapping' accomplish in TFHE?",
     options: [
       "Initializes the encryption keys at startup",
-      "Refreshes ciphertext to reduce accumulated noise",
+      "Resets noise to a low level",
       "Converts plaintext to encrypted form",
       "Distributes keys across multiple servers"
     ],
     correctAnswer: 1,
-    explanation: "FHE operations add 'noise' to ciphertexts. Too much noise makes decryption impossible. Bootstrapping resets the noise level, allowing unlimited further computations. It's computationally expensive but essential.",
+    explanation: "FHE operations accumulate 'noise' in ciphertexts. Too much noise corrupts the result. Bootstrapping (also called Programmable Bootstrapping or ciphertext refreshing) resets noise to a fixed low level, enabling unlimited further operations. It's computationally expensive but essential.",
     source: {
       type: "docs",
       reference: "https://docs.zama.ai/tfhe-rs",
@@ -147,18 +147,18 @@ export const questions: Question[] = [
     id: "B008",
     difficulty: "beginner",
     section: "fhEVM as Solidity Library",
-    question: "What is fhEVM?",
+    question: "What does the fhEVM library do?",
     options: [
-      "A modified Ethereum Virtual Machine for encrypted data",
-      "A Solidity library that enables FHE operations in smart contracts",
-      "A separate blockchain designed for private transactions",
-      "A layer-2 scaling solution using encryption for compression"
+      "Replaces the EVM with a privacy-focused virtual machine",
+      "Enables confidential smart contracts on EVM-compatible blockchains",
+      "Provides off-chain computation for expensive operations",
+      "Encrypts all blockchain state automatically"
     ],
     correctAnswer: 1,
-    explanation: "fhEVM is a Solidity library and toolset. Developers import it to add encrypted types and operations to their contracts on existing EVM chains. It's not a separate blockchain or modified EVM.",
+    explanation: "fhEVM is the core framework of the Zama Confidential Blockchain Protocol. It enables confidential smart contracts on EVM-compatible blockchains using FHE—encrypted state co-exists alongside public state without impacting existing dApps.",
     source: {
       type: "docs",
-      reference: "https://docs.zama.ai/fhevm",
+      reference: "https://github.com/zama-ai/fhevm",
       retrievedAt: "2026-01-07"
     }
   },
@@ -185,7 +185,7 @@ export const questions: Question[] = [
     id: "B010",
     difficulty: "beginner",
     section: "fhEVM as Solidity Library",
-    question: "What happens when you call TFHE.add(a, b) where both are encrypted?",
+    question: "What happens when you call TFHE.add(a, b) where both a and b are encrypted?",
     options: [
       "The values are decrypted, added, then re-encrypted",
       "The operation fails because both inputs are encrypted",
@@ -240,59 +240,23 @@ export const questions: Question[] = [
       retrievedAt: "2026-01-07"
     }
   },
-  {
-    id: "B013",
-    difficulty: "beginner",
-    section: "Developer Mental Model",
-    question: "What is the result of comparing two encrypted values with TFHE.gt(a, b)?",
-    options: [
-      "A boolean true or false in plaintext",
-      "An encrypted boolean (ebool) that hides the comparison result",
-      "The operation reverts because comparisons aren't supported",
-      "A numeric value indicating which operand is greater"
-    ],
-    correctAnswer: 1,
-    explanation: "Comparisons between encrypted values produce encrypted results. You get an ebool—an encrypted boolean. To use the result in plaintext logic (like if statements), you'd need to decrypt it first.",
-    source: {
-      type: "docs",
-      reference: "https://docs.zama.ai/fhevm/fundamentals/operations",
-      retrievedAt: "2026-01-07"
-    }
-  },
-  {
-    id: "B014",
-    difficulty: "beginner",
-    section: "Developer Mental Model",
-    question: "Why can't you log or display an encrypted value directly?",
-    options: [
-      "The EVM doesn't support logging encrypted types",
-      "Encrypted values are ciphertext, not human-readable data",
-      "Logging would consume too much gas",
-      "Only the KMS has permission to read encrypted values"
-    ],
-    correctAnswer: 1,
-    explanation: "An encrypted value is ciphertext—seemingly random bytes that only make sense after decryption. Logging it reveals nothing useful. To see the actual value, you must decrypt it through proper channels.",
-    source: {
-      type: "docs",
-      reference: "https://docs.zama.ai/fhevm",
-      retrievedAt: "2026-01-07"
-    }
-  },
+
+
 
   // Section: Real Use Cases (3 questions)
   {
     id: "B015",
     difficulty: "beginner",
     section: "Real Use Cases",
-    question: "How does fhEVM enable confidential token transfers?",
+    question: "How does the Zama protocol enable confidential token transfers?",
     options: [
       "By routing transactions through private relay networks",
-      "By keeping balances and transfer amounts encrypted on-chain",
+      "By performing arithmetic on encrypted balances using FHE",
       "By using zero-knowledge proofs to hide transaction data",
-      "By storing token data off-chain in encrypted databases"
+      "By encrypting data only in the user's browser"
     ],
     correctAnswer: 1,
-    explanation: "With fhEVM, token balances are stored as encrypted values (euint64). Transfers update encrypted balances using FHE operations. Observers see transactions happen but can't see amounts or resulting balances.",
+    explanation: "Balances are stored encrypted and transfers are computed using FHE operations—addition and subtraction happen directly on ciphertexts. The actual values are never exposed during the transfer. Observers see transactions occur but can't see amounts or resulting balances.",
     source: {
       type: "docs",
       reference: "https://docs.zama.ai/fhevm",

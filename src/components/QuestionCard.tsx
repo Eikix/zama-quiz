@@ -35,7 +35,7 @@ export function QuestionCard({
         />
       </div>
       
-      <h2 className="text-xl font-semibold text-white mb-6 leading-relaxed">
+      <h2 className="text-xl font-semibold text-white mb-6 leading-relaxed select-text">
         {question.question}
       </h2>
 
@@ -63,25 +63,27 @@ export function QuestionCard({
           }
 
           return (
-            <button
+            <div
               key={index}
               onClick={() => canSelect && onSelectAnswer(index)}
-              disabled={!canSelect}
-              className={buttonClass}
+              role="button"
+              tabIndex={canSelect ? 0 : -1}
+              onKeyDown={(e) => e.key === 'Enter' && canSelect && onSelectAnswer(index)}
+              className={buttonClass + (canSelect ? ' cursor-pointer' : '')}
             >
               <span className="flex items-center gap-3">
-                <span className="flex-shrink-0 w-8 h-8 rounded-lg bg-stone-600 flex items-center justify-center text-sm font-medium">
+                <span className="flex-shrink-0 w-8 h-8 rounded-lg bg-stone-600 flex items-center justify-center text-sm font-medium select-none">
                   {String.fromCharCode(65 + index)}
                 </span>
-                <span>{option}</span>
+                <span className="select-text">{option}</span>
                 {showExplanation && isCorrectOption && (
-                  <span className="ml-auto text-green-400">✓</span>
+                  <span className="ml-auto text-green-400 select-none">✓</span>
                 )}
                 {showExplanation && isSelected && !isCorrectOption && (
-                  <span className="ml-auto text-red-400">✗</span>
+                  <span className="ml-auto text-red-400 select-none">✗</span>
                 )}
               </span>
-            </button>
+            </div>
           );
         })}
       </div>
@@ -95,7 +97,7 @@ export function QuestionCard({
               <span className="text-amber-400 font-semibold">Not quite right</span>
             )}
           </div>
-          <p className="text-gray-300 text-sm leading-relaxed">
+          <p className="text-gray-300 text-sm leading-relaxed select-text">
             {question.explanation}
           </p>
         </div>
