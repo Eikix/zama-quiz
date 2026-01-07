@@ -7,6 +7,7 @@ import { NavigationButtons } from './components/NavigationButtons';
 import { QuestionNav } from './components/QuestionNav';
 import { Results } from './components/Results';
 import { Leaderboard } from './components/Leaderboard';
+import type { ShuffledQuestion } from './types/quiz';
 
 type Screen = 'welcome' | 'quiz' | 'results';
 
