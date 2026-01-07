@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { ShuffledQuestion, SectionScore, Difficulty } from '../types/quiz';
-import { sections } from '../data/questions';
+import { beginnerSections, advancedSections } from '../data/questions';
 import { SubmitScore } from './SubmitScore';
 import { Leaderboard } from './Leaderboard';
 
@@ -21,6 +21,7 @@ export function Results({ questions, answers, mode, onRestart, onReview }: Resul
 
   const percentage = Math.round((correctCount / questions.length) * 100);
 
+  const sections = mode === 'beginner' ? beginnerSections : advancedSections;
   const sectionScores: SectionScore[] = sections.map(section => {
     const sectionQuestions = questions.filter(q => q.section === section);
     const correct = sectionQuestions.filter((q) => {

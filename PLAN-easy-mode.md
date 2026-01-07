@@ -3,6 +3,29 @@
 ## Overview
 Add a "Beginner" difficulty mode for external users (developers, crypto enthusiasts) who aren't Zama employees with deep internal knowledge.
 
+## Key Concepts (MUST understand before writing questions)
+
+### What is fhEVM?
+fhEVM is a **Solidity library and toolset** that enables developers to use FHE directly from their smart contracts. 
+
+**It is NOT:**
+- A separate EVM or blockchain
+- A modified Ethereum client
+- An "EVM that runs on encrypted data"
+
+**It IS:**
+- A Solidity library (`TFHE.sol`) providing encrypted types and operations
+- A monorepo containing library, coprocessor, gateway, and SDK
+- A developer SDK integrating FHE with existing EVM chains
+
+### Primary FHE Use Cases (for Zama)
+- Confidential DeFi (hidden balances, MEV protection, private orderbooks)
+- Private voting (encrypted votes, verifiable tallies without revealing individual votes)
+- Sealed-bid auctions (bids hidden until reveal)
+- Confidential ERC-20 tokens (hidden balances and transfer amounts)
+
+**NOT a primary use case:** Gaming (do not mention in questions)
+
 ---
 
 ## 1. Question Type Changes
@@ -101,26 +124,49 @@ CREATE INDEX idx_leaderboard_mode ON leaderboard(mode);
 - Code-level details (DFG, workers, listeners)
 
 ### Topic Areas for Beginner Questions
-1. **FHE Fundamentals**
-   - What is FHE? What problem does it solve?
-   - Encryption vs homomorphic encryption
-   - Why noise? Why bootstrapping?
 
-2. **Zama High-Level Architecture**
-   - What is fhEVM?
-   - Role of Coprocessor (compute), KMS (keys), Gateway (coordinate)
-   - On-chain vs off-chain split
+**Design Rules (CRITICAL):**
+- All answer options must be similar in length and detail level
+- Distractors must be plausible (things someone might actually believe)
+- Test understanding ("why") over trivia ("what")
+- No trick questions
+- Correct answer should NOT be the most detailed or precise option
 
-3. **Developer Basics**
-   - Encrypted types (euint8, euint64, ebool, eaddress)
-   - Basic operations (add, mul, compare)
-   - How to encrypt user input
-   - Access control basics (who can decrypt)
+1. **FHE Fundamentals (Conceptual)**
+   - What problem does FHE solve? (compute on encrypted data without decrypting)
+   - How is FHE different from traditional encryption? (computation vs storage)
+   - What are the tradeoffs? (performance cost, ciphertext expansion)
+   - What does "homomorphic" mean in this context?
 
-4. **Trust Model & Security**
-   - Who holds the keys?
-   - What is threshold decryption?
-   - Public vs private decryption
+2. **TFHE Scheme Basics**
+   - Why TFHE over other FHE schemes? (fast bootstrapping, boolean/integer friendly)
+   - What is bootstrapping and why is it needed? (noise management)
+   - What types of operations does TFHE support well?
+   - What is "noise" in FHE and why does it matter?
+
+3. **fhEVM as Solidity Library**
+   - What is fhEVM? (Solidity library to use FHE in smart contracts - NOT a separate EVM)
+   - What does `TFHE.asEuint8(x)` do?
+   - What's the difference between `euint8` and `uint8`?
+   - Who can decrypt values? (only authorized addresses via ACL)
+
+4. **Developer Mental Model**
+   - When should you use encrypted types vs plaintext?
+   - What happens when you compare two encrypted values?
+   - Why can't you just `console.log` an encrypted value?
+   - What is the ACL and why is it needed?
+
+5. **Real Use Cases**
+   - Confidential ERC-20 (hidden balances/transfers)
+   - Sealed-bid auctions (bids hidden until reveal)
+   - Private voting (encrypted votes, tallied without revealing)
+   - Confidential DeFi (hidden order books, MEV protection)
+
+6. **Common Misconceptions**
+   - "FHE makes everything private" → No, only what you explicitly encrypt
+   - "FHE is slow so it's useless" → Tradeoffs exist, Zama optimizes
+   - "I need cryptography knowledge to use fhEVM" → Library abstracts it
+   - "Encrypted computation gives different results" → No, same as plaintext
 
 ---
 

@@ -2,6 +2,16 @@
 
 This file provides context for LLM agents continuing work on this project.
 
+## Startup Tasks
+
+On every session start, check for open issues:
+
+```bash
+gh issue list --repo Eikix/zama-quiz --state open
+```
+
+Address any user-reported question errors or feature requests before other work.
+
 ## Project Overview
 
 **Zama Protocol Quiz App** - An interactive quiz testing knowledge of Zama's FHE blockchain stack (fhEVM, TKMS, Coprocessors, Gateway, TFHE-rs).
@@ -9,6 +19,23 @@ This file provides context for LLM agents continuing work on this project.
 - **Tech Stack**: React + TypeScript + Vite + Tailwind CSS
 - **Deployed on**: Netlify (auto-deploys from GitHub on push to main)
 - **GitHub**: https://github.com/Eikix/zama-quiz
+
+## Key Concepts (IMPORTANT)
+
+### What is fhEVM?
+fhEVM is a **Solidity library and toolset** that enables developers to use Fully Homomorphic Encryption (FHE) directly from their smart contracts. It is NOT a separate EVM or blockchain - it's a developer SDK that integrates with existing EVM chains.
+
+- **For external developers**: A Solidity library (`TFHE.sol`) providing encrypted types (`euint8`, `euint32`, etc.) and operations
+- **On GitHub**: A monorepo containing the library, coprocessor, gateway, and SDK implementations
+
+### What is FHE?
+Fully Homomorphic Encryption allows computation on encrypted data without decrypting it. The result, when decrypted, matches what you'd get from computing on plaintext.
+
+### Primary Use Cases (NOT gaming)
+- Confidential DeFi (hidden balances, MEV protection)
+- Private voting (encrypted votes, verifiable tallies)
+- Sealed-bid auctions
+- Confidential ERC-20 tokens
 
 ## Key Files
 
@@ -72,6 +99,28 @@ git push         # Auto-deploys to Netlify
 
 ## Current State (as of January 2026)
 
-- **36 questions** across 5 sections
-- Sections: Architecture & Components, Data Flow & Encryption, Decryption Mechanisms, Service Interactions, Advanced Concepts
+- **35 advanced questions** across 5 sections (Architecture & Components, Data Flow & Encryption, Decryption Mechanisms, Service Interactions, Advanced Concepts)
+- **18 beginner questions** (DISABLED - need revision)
 - Recent additions focused on DFG (Data Flow Graph), tfhe-worker internals, and symbolic execution
+
+## Difficulty Modes
+
+### Advanced Mode (currently active)
+Internal architecture, implementation details, benchmarks. For Zama engineers and power users.
+
+### Beginner Mode (disabled, needs revision)
+Target audience: developers new to FHE/fhEVM who want to learn.
+
+**Beginner Question Categories:**
+1. FHE Fundamentals - What FHE is and why it matters
+2. TFHE Scheme Basics - High-level understanding of Zama's chosen scheme  
+3. fhEVM as Solidity Library - Correct framing of what fhEVM is
+4. Developer Mental Model - How to think about building with fhEVM
+5. Real Use Cases - Confidential DeFi, voting, auctions (NOT gaming)
+6. Common Misconceptions - Correct wrong assumptions
+
+**Question Design Rules:**
+- All answer options must be similar in length and detail level
+- Distractors must be plausible (things someone might actually believe)
+- Test understanding ("why") over trivia ("what")
+- No trick questions

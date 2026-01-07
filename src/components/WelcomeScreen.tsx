@@ -1,4 +1,4 @@
-import { questions } from '../data/questions';
+import { questions, advancedSections } from '../data/questions';
 import type { Difficulty } from '../types/quiz';
 
 interface WelcomeScreenProps {
@@ -6,7 +6,6 @@ interface WelcomeScreenProps {
 }
 
 export function WelcomeScreen({ onStart }: WelcomeScreenProps) {
-  // TODO: Re-enable beginner mode once questions are revised
   const advancedCount = questions.filter(q => q.difficulty === 'advanced').length;
 
   return (
@@ -24,7 +23,7 @@ export function WelcomeScreen({ onStart }: WelcomeScreenProps) {
           <text x="32" y="35" fontFamily="system-ui, sans-serif" fontSize="20" fontWeight="bold" fill="white" textAnchor="middle">Z</text>
         </svg>
         <h1 className="text-3xl font-bold text-white mb-2">Zama Protocol Quiz</h1>
-        <p className="text-gray-400">Put your Zama knowledge to the test</p>
+        <p className="text-gray-400">Test your FHE and fhEVM knowledge</p>
       </div>
 
       <div className="grid grid-cols-2 gap-4 mb-6 text-left">
@@ -33,7 +32,7 @@ export function WelcomeScreen({ onStart }: WelcomeScreenProps) {
           <div className="text-sm text-gray-400">Questions</div>
         </div>
         <div className="bg-stone-700/50 rounded-xl p-4">
-          <div className="text-2xl font-bold text-amber-400">5</div>
+          <div className="text-2xl font-bold text-amber-400">{advancedSections.length}</div>
           <div className="text-sm text-gray-400">Sections</div>
         </div>
       </div>
@@ -41,13 +40,7 @@ export function WelcomeScreen({ onStart }: WelcomeScreenProps) {
       <div className="mb-6 text-left">
         <h3 className="text-white font-semibold mb-3">Topics Covered</h3>
         <ul className="space-y-2">
-          {[
-            'Architecture & Components',
-            'Data Flow & Encryption',
-            'Decryption Mechanisms',
-            'Service Interactions',
-            'Advanced Concepts'
-          ].map((topic, i) => (
+          {advancedSections.map((topic, i) => (
             <li key={i} className="flex items-center gap-2 text-gray-300 text-sm">
               <span className="w-1.5 h-1.5 rounded-full bg-orange-500"></span>
               {topic}

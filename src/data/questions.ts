@@ -2,23 +2,23 @@ import type { Question } from '../types/quiz';
 
 export const questions: Question[] = [
   // ============================================
-  // BEGINNER QUESTIONS
+  // BEGINNER QUESTIONS (20 questions, 6 sections)
   // ============================================
 
-  // Section: FHE Fundamentals
+  // Section: FHE Fundamentals (4 questions)
   {
     id: "B001",
     difficulty: "beginner",
     section: "FHE Fundamentals",
-    question: "What does FHE stand for?",
+    question: "What does Fully Homomorphic Encryption (FHE) enable?",
     options: [
-      "Fast Homomorphic Execution",
-      "Fully Homomorphic Encryption",
-      "Federated Hash Encoding",
-      "Functional Hash Encryption"
+      "Storing data in encrypted form on untrusted servers",
+      "Performing computations on encrypted data without decrypting it",
+      "Sending encrypted messages between two parties securely",
+      "Generating cryptographic keys from passwords"
     ],
     correctAnswer: 1,
-    explanation: "FHE stands for Fully Homomorphic Encryption. It's a form of encryption that allows computations to be performed directly on encrypted data without decrypting it first.",
+    explanation: "FHE allows computations directly on ciphertext. When decrypted, the result matches what you'd get from computing on the original plaintext. Traditional encryption only protects data at rest or in transit, not during computation.",
     source: {
       type: "docs",
       reference: "https://docs.zama.ai/tfhe-rs",
@@ -29,15 +29,15 @@ export const questions: Question[] = [
     id: "B002",
     difficulty: "beginner",
     section: "FHE Fundamentals",
-    question: "What is the main benefit of Fully Homomorphic Encryption?",
+    question: "How does FHE differ from traditional encryption like AES?",
     options: [
-      "It makes encryption faster than traditional methods",
-      "It allows computation on encrypted data without revealing the plaintext",
-      "It reduces the size of encrypted data",
-      "It eliminates the need for encryption keys"
+      "FHE uses larger key sizes for better security",
+      "FHE allows mathematical operations on ciphertext",
+      "FHE is faster for encrypting large files",
+      "FHE requires multiple parties to decrypt"
     ],
     correctAnswer: 1,
-    explanation: "The key benefit of FHE is that it enables computation on encrypted data. The data remains encrypted throughout the computation, and only the final result needs to be decrypted by authorized parties.",
+    explanation: "Traditional encryption protects data at rest—you must decrypt before processing. FHE preserves the ability to compute on encrypted data, producing encrypted results that decrypt to correct answers.",
     source: {
       type: "docs",
       reference: "https://docs.zama.ai/fhevm",
@@ -48,18 +48,18 @@ export const questions: Question[] = [
     id: "B003",
     difficulty: "beginner",
     section: "FHE Fundamentals",
-    question: "In TFHE, what is 'noise' and why does it matter?",
+    question: "What is 'ciphertext expansion' in FHE?",
     options: [
-      "Random data added for compression purposes",
-      "A security measure that grows with each operation and must be managed",
-      "Audio interference in encrypted communications",
-      "Unused bits in the ciphertext that can be ignored"
+      "The process of adding more encryption layers",
+      "Encrypted data being larger than the original plaintext",
+      "The time it takes to encrypt larger inputs",
+      "Converting one ciphertext into multiple ciphertexts"
     ],
     correctAnswer: 1,
-    explanation: "In TFHE, noise is random data added during encryption that provides security. However, noise grows with each homomorphic operation. If it grows too large, it corrupts the result. This is why noise management (through bootstrapping) is essential.",
+    explanation: "In FHE, ciphertext is significantly larger than the original plaintext (often 1000x+ larger). This is a fundamental tradeoff for enabling computation on encrypted data.",
     source: {
-      type: "paper",
-      reference: "TFHE: Fast Fully Homomorphic Encryption over the Torus (Chillotti et al.)",
+      type: "docs",
+      reference: "https://docs.zama.ai/tfhe-rs",
       retrievedAt: "2026-01-07"
     }
   },
@@ -67,15 +67,74 @@ export const questions: Question[] = [
     id: "B004",
     difficulty: "beginner",
     section: "FHE Fundamentals",
-    question: "What does 'bootstrapping' do in FHE?",
+    question: "What is the main tradeoff when using FHE?",
     options: [
-      "Initializes the encryption system for first use",
-      "Resets the noise level so more operations can be performed",
-      "Generates new encryption keys",
-      "Converts plaintext to ciphertext"
+      "Security is weaker than traditional encryption",
+      "Only certain data types can be encrypted",
+      "Computations are slower than on plaintext",
+      "Data must be stored on specialized hardware"
+    ],
+    correctAnswer: 2,
+    explanation: "FHE operations are computationally expensive compared to plaintext operations. This is the cost of being able to compute without decrypting. Zama's TFHE implementation optimizes this, but the tradeoff remains fundamental.",
+    source: {
+      type: "docs",
+      reference: "https://docs.zama.ai/fhevm",
+      retrievedAt: "2026-01-07"
+    }
+  },
+
+  // Section: TFHE Scheme Basics (3 questions)
+  {
+    id: "B005",
+    difficulty: "beginner",
+    section: "TFHE Scheme Basics",
+    question: "What does 'bootstrapping' accomplish in TFHE?",
+    options: [
+      "Initializes the encryption keys at startup",
+      "Refreshes ciphertext to reduce accumulated noise",
+      "Converts plaintext to encrypted form",
+      "Distributes keys across multiple servers"
     ],
     correctAnswer: 1,
-    explanation: "Bootstrapping is an operation that resets (reduces) the noise in a ciphertext. Without bootstrapping, the accumulated noise would eventually corrupt the encrypted data. It's what makes FHE 'fully' homomorphic - enabling unlimited operations.",
+    explanation: "FHE operations add 'noise' to ciphertexts. Too much noise makes decryption impossible. Bootstrapping resets the noise level, allowing unlimited further computations. It's computationally expensive but essential.",
+    source: {
+      type: "docs",
+      reference: "https://docs.zama.ai/tfhe-rs",
+      retrievedAt: "2026-01-07"
+    }
+  },
+  {
+    id: "B006",
+    difficulty: "beginner",
+    section: "TFHE Scheme Basics",
+    question: "Why does noise accumulate in FHE ciphertexts?",
+    options: [
+      "Network transmission corrupts the encrypted data",
+      "Each homomorphic operation adds mathematical error",
+      "Storage media degrades the ciphertext over time",
+      "Multiple users accessing the same ciphertext adds noise"
+    ],
+    correctAnswer: 1,
+    explanation: "Noise is intentionally added during encryption for security. Each operation (especially multiplication) increases this noise. Without management via bootstrapping, noise eventually overwhelms the actual data.",
+    source: {
+      type: "paper",
+      reference: "TFHE: Fast Fully Homomorphic Encryption over the Torus (Chillotti et al.)",
+      retrievedAt: "2026-01-07"
+    }
+  },
+  {
+    id: "B007",
+    difficulty: "beginner",
+    section: "TFHE Scheme Basics",
+    question: "What types of operations does TFHE handle efficiently?",
+    options: [
+      "Floating-point arithmetic and matrix operations",
+      "Integer arithmetic, comparisons, and bitwise operations",
+      "String manipulation and regular expressions",
+      "Graph traversal and recursive algorithms"
+    ],
+    correctAnswer: 1,
+    explanation: "TFHE is optimized for integer and boolean operations—additions, multiplications, comparisons, AND/OR/XOR. These cover most smart contract logic. Complex operations like floating-point require different approaches.",
     source: {
       type: "docs",
       reference: "https://docs.zama.ai/tfhe-rs",
@@ -83,98 +142,39 @@ export const questions: Question[] = [
     }
   },
 
-  // Section: Zama Architecture
-  {
-    id: "B005",
-    difficulty: "beginner",
-    section: "Zama Architecture",
-    question: "What is fhEVM?",
-    options: [
-      "A new programming language for encryption",
-      "A modified EVM that supports operations on encrypted data",
-      "A hardware accelerator for FHE computations",
-      "A wallet for storing encrypted assets"
-    ],
-    correctAnswer: 1,
-    explanation: "fhEVM is Zama's confidential smart contract protocol. It extends the Ethereum Virtual Machine (EVM) to support encrypted data types and operations, allowing developers to write smart contracts that process encrypted data.",
-    source: {
-      type: "docs",
-      reference: "https://docs.zama.ai/fhevm",
-      retrievedAt: "2026-01-07"
-    }
-  },
-  {
-    id: "B006",
-    difficulty: "beginner",
-    section: "Zama Architecture",
-    question: "In the Zama architecture, what is the role of the Coprocessor?",
-    options: [
-      "To store encrypted data permanently",
-      "To perform the actual FHE computations off-chain",
-      "To manage user authentication",
-      "To process blockchain transactions"
-    ],
-    correctAnswer: 1,
-    explanation: "The Coprocessor is the off-chain computation engine that performs actual FHE operations. Since FHE computations are expensive, they run off-chain on the Coprocessor while the blockchain handles coordination and verification.",
-    source: {
-      type: "docs",
-      reference: "https://docs.zama.ai/fhevm",
-      retrievedAt: "2026-01-07"
-    }
-  },
-  {
-    id: "B007",
-    difficulty: "beginner",
-    section: "Zama Architecture",
-    question: "What is the KMS (Key Management Service) responsible for in Zama?",
-    options: [
-      "Storing user passwords",
-      "Managing the FHE keys and performing threshold decryption",
-      "Compiling smart contracts",
-      "Processing cryptocurrency payments"
-    ],
-    correctAnswer: 1,
-    explanation: "The KMS manages the global FHE keys used for encryption and decryption. It uses threshold cryptography, meaning multiple KMS nodes must cooperate to decrypt data - no single node can decrypt alone.",
-    source: {
-      type: "docs",
-      reference: "https://docs.zama.ai/fhevm",
-      retrievedAt: "2026-01-07"
-    }
-  },
+  // Section: fhEVM as Solidity Library (4 questions)
   {
     id: "B008",
     difficulty: "beginner",
-    section: "Zama Architecture",
-    question: "Why are FHE computations performed off-chain rather than directly on the blockchain?",
+    section: "fhEVM as Solidity Library",
+    question: "What is fhEVM?",
     options: [
-      "Blockchains don't support mathematical operations",
-      "FHE computations are too expensive (time and resources) for on-chain execution",
-      "Off-chain is more secure than on-chain",
-      "FHE only works on centralized servers"
+      "A modified Ethereum Virtual Machine for encrypted data",
+      "A Solidity library that enables FHE operations in smart contracts",
+      "A separate blockchain designed for private transactions",
+      "A layer-2 scaling solution using encryption for compression"
     ],
     correctAnswer: 1,
-    explanation: "FHE operations are computationally intensive - a single encrypted multiplication can take tens of milliseconds. Running these directly on a blockchain would be prohibitively expensive in terms of gas costs and would slow down the network.",
+    explanation: "fhEVM is a Solidity library and toolset. Developers import it to add encrypted types and operations to their contracts on existing EVM chains. It's not a separate blockchain or modified EVM.",
     source: {
       type: "docs",
       reference: "https://docs.zama.ai/fhevm",
       retrievedAt: "2026-01-07"
     }
   },
-
-  // Section: Developer Basics
   {
     id: "B009",
     difficulty: "beginner",
-    section: "Developer Basics",
-    question: "Which of the following is a valid encrypted integer type in fhEVM?",
+    section: "fhEVM as Solidity Library",
+    question: "What does the 'euint32' type represent in fhEVM?",
     options: [
-      "encryptedInt",
-      "euint64",
-      "fheNumber",
-      "secureInt256"
+      "An unsigned 32-bit integer stored in extended precision",
+      "An encrypted unsigned 32-bit integer for FHE operations",
+      "An Ethereum-specific integer optimized for gas costs",
+      "An error-checked integer that reverts on overflow"
     ],
     correctAnswer: 1,
-    explanation: "fhEVM provides encrypted types like euint8, euint16, euint32, euint64, etc. The 'e' prefix stands for 'encrypted'. These types work similarly to regular Solidity integers but operate on encrypted values.",
+    explanation: "The 'e' prefix means 'encrypted.' euint32 is a 32-bit unsigned integer in encrypted form. You can perform FHE operations on it without revealing the underlying value.",
     source: {
       type: "docs",
       reference: "https://docs.zama.ai/fhevm/fundamentals/types",
@@ -184,35 +184,16 @@ export const questions: Question[] = [
   {
     id: "B010",
     difficulty: "beginner",
-    section: "Developer Basics",
-    question: "What is an 'ebool' in fhEVM?",
+    section: "fhEVM as Solidity Library",
+    question: "What happens when you call TFHE.add(a, b) where both are encrypted?",
     options: [
-      "An error boolean for exception handling",
-      "An encrypted boolean value (true/false)",
-      "An external boolean from another contract",
-      "A boolean that expires after one use"
+      "The values are decrypted, added, then re-encrypted",
+      "The operation fails because both inputs are encrypted",
+      "An encrypted result is computed without decrypting inputs",
+      "The addition happens on-chain using validator consensus"
     ],
-    correctAnswer: 1,
-    explanation: "ebool is an encrypted boolean type in fhEVM. It stores a true/false value in encrypted form, allowing confidential conditional logic in smart contracts without revealing the actual condition.",
-    source: {
-      type: "docs",
-      reference: "https://docs.zama.ai/fhevm/fundamentals/types",
-      retrievedAt: "2026-01-07"
-    }
-  },
-  {
-    id: "B011",
-    difficulty: "beginner",
-    section: "Developer Basics",
-    question: "Can you directly compare two encrypted values (e.g., check if euint64 a > euint64 b) in fhEVM?",
-    options: [
-      "No, encrypted values cannot be compared at all",
-      "Yes, but the result is an encrypted boolean (ebool), not a plaintext boolean",
-      "Yes, and it returns a regular true/false value",
-      "Only if you decrypt them first"
-    ],
-    correctAnswer: 1,
-    explanation: "You can compare encrypted values in fhEVM, but the result is an encrypted boolean (ebool). The actual comparison result remains hidden. You cannot directly use it in a regular if statement without decryption.",
+    correctAnswer: 2,
+    explanation: "This is the core FHE capability—computing on encrypted data. Neither 'a' nor 'b' is decrypted. The result is an encrypted value that, when decrypted, equals the sum of the original plaintexts.",
     source: {
       type: "docs",
       reference: "https://docs.zama.ai/fhevm/fundamentals/operations",
@@ -220,58 +201,39 @@ export const questions: Question[] = [
     }
   },
   {
-    id: "B012",
+    id: "B011",
     difficulty: "beginner",
-    section: "Developer Basics",
-    question: "What is an 'eaddress' in fhEVM?",
+    section: "fhEVM as Solidity Library",
+    question: "Who can decrypt an encrypted value in fhEVM?",
     options: [
-      "An email address stored on-chain",
-      "An encrypted Ethereum address",
-      "An external address from another blockchain",
-      "An emergency recovery address"
+      "Anyone with access to the blockchain",
+      "Only the original encryptor of the value",
+      "Addresses explicitly granted permission via the ACL",
+      "Only the contract that created the encrypted value"
     ],
-    correctAnswer: 1,
-    explanation: "eaddress is an encrypted Ethereum address type in fhEVM. It allows contracts to work with addresses confidentially, useful for scenarios like private voting or confidential transfers where the recipient should be hidden.",
-    source: {
-      type: "docs",
-      reference: "https://docs.zama.ai/fhevm/fundamentals/types",
-      retrievedAt: "2026-01-07"
-    }
-  },
-
-  // Section: Trust & Security
-  {
-    id: "B013",
-    difficulty: "beginner",
-    section: "Trust & Security",
-    question: "In Zama's architecture, who can decrypt encrypted data?",
-    options: [
-      "Anyone with the transaction hash",
-      "Only parties authorized via the Access Control List (ACL)",
-      "Any node on the blockchain",
-      "Only the contract deployer"
-    ],
-    correctAnswer: 1,
-    explanation: "Decryption is controlled by the ACL (Access Control List). Smart contracts must explicitly grant decryption permissions. This ensures that even though data is on a public blockchain, only authorized parties can decrypt it.",
+    correctAnswer: 2,
+    explanation: "fhEVM uses an Access Control List (ACL) to manage decryption permissions. Contract developers specify which addresses can request decryption of specific values. This enables controlled data sharing.",
     source: {
       type: "docs",
       reference: "https://docs.zama.ai/fhevm/fundamentals/acl",
       retrievedAt: "2026-01-07"
     }
   },
+
+  // Section: Developer Mental Model (3 questions)
   {
-    id: "B014",
+    id: "B012",
     difficulty: "beginner",
-    section: "Trust & Security",
-    question: "What is 'threshold decryption' in the Zama KMS?",
+    section: "Developer Mental Model",
+    question: "When should you use encrypted types in fhEVM?",
     options: [
-      "Decryption that only works below a certain file size",
-      "A system where multiple parties must cooperate to decrypt - no single party can decrypt alone",
-      "Decryption that happens after a time delay",
-      "A faster decryption method for large files"
+      "For all variables to maximize security",
+      "Only for data that needs to remain confidential",
+      "Only for values that will never be decrypted",
+      "For any value involved in arithmetic operations"
     ],
     correctAnswer: 1,
-    explanation: "Threshold decryption means the decryption key is split among multiple KMS nodes. A minimum number (threshold) of nodes must participate to decrypt. This prevents any single party from accessing encrypted data unilaterally.",
+    explanation: "Encrypted operations are expensive. Use encrypted types for sensitive data (balances, votes, bids) and plaintext for everything else (timestamps, public counters, configuration). Encrypt selectively.",
     source: {
       type: "docs",
       reference: "https://docs.zama.ai/fhevm",
@@ -279,39 +241,77 @@ export const questions: Question[] = [
     }
   },
   {
-    id: "B015",
+    id: "B013",
     difficulty: "beginner",
-    section: "Trust & Security",
-    question: "What is the difference between 'public decryption' and 'user decryption' in fhEVM?",
+    section: "Developer Mental Model",
+    question: "What is the result of comparing two encrypted values with TFHE.gt(a, b)?",
     options: [
-      "Public decryption is free, user decryption costs gas",
-      "Public decryption reveals the plaintext on-chain, user decryption keeps it private to the user",
-      "Public decryption is faster than user decryption",
-      "There is no difference, they are the same"
+      "A boolean true or false in plaintext",
+      "An encrypted boolean (ebool) that hides the comparison result",
+      "The operation reverts because comparisons aren't supported",
+      "A numeric value indicating which operand is greater"
     ],
     correctAnswer: 1,
-    explanation: "Public decryption reveals the decrypted value on-chain for everyone to see (useful for auction results, game outcomes, etc.). User decryption encrypts the result under the user's personal key, so only they can see it.",
+    explanation: "Comparisons between encrypted values produce encrypted results. You get an ebool—an encrypted boolean. To use the result in plaintext logic (like if statements), you'd need to decrypt it first.",
     source: {
       type: "docs",
-      reference: "https://docs.zama.ai/fhevm/fundamentals/decryption",
+      reference: "https://docs.zama.ai/fhevm/fundamentals/operations",
+      retrievedAt: "2026-01-07"
+    }
+  },
+  {
+    id: "B014",
+    difficulty: "beginner",
+    section: "Developer Mental Model",
+    question: "Why can't you log or display an encrypted value directly?",
+    options: [
+      "The EVM doesn't support logging encrypted types",
+      "Encrypted values are ciphertext, not human-readable data",
+      "Logging would consume too much gas",
+      "Only the KMS has permission to read encrypted values"
+    ],
+    correctAnswer: 1,
+    explanation: "An encrypted value is ciphertext—seemingly random bytes that only make sense after decryption. Logging it reveals nothing useful. To see the actual value, you must decrypt it through proper channels.",
+    source: {
+      type: "docs",
+      reference: "https://docs.zama.ai/fhevm",
       retrievedAt: "2026-01-07"
     }
   },
 
-  // Section: Use Cases
+  // Section: Real Use Cases (3 questions)
+  {
+    id: "B015",
+    difficulty: "beginner",
+    section: "Real Use Cases",
+    question: "How does fhEVM enable confidential token transfers?",
+    options: [
+      "By routing transactions through private relay networks",
+      "By keeping balances and transfer amounts encrypted on-chain",
+      "By using zero-knowledge proofs to hide transaction data",
+      "By storing token data off-chain in encrypted databases"
+    ],
+    correctAnswer: 1,
+    explanation: "With fhEVM, token balances are stored as encrypted values (euint64). Transfers update encrypted balances using FHE operations. Observers see transactions happen but can't see amounts or resulting balances.",
+    source: {
+      type: "docs",
+      reference: "https://docs.zama.ai/fhevm",
+      retrievedAt: "2026-01-07"
+    }
+  },
   {
     id: "B016",
     difficulty: "beginner",
-    section: "Use Cases",
-    question: "Which of the following is a good use case for fhEVM?",
+    section: "Real Use Cases",
+    question: "What makes sealed-bid auctions possible with FHE?",
     options: [
-      "Public token transfers where everyone should see the amounts",
-      "Confidential voting where votes should remain private",
-      "Displaying public NFT metadata",
-      "Publishing blog posts on-chain"
+      "Bids are committed as hashes and revealed later",
+      "Bids remain encrypted and the winner is determined without revealing amounts",
+      "A trusted auctioneer collects and compares bids privately",
+      "Bidders encrypt bids with each other's public keys"
     ],
     correctAnswer: 1,
-    explanation: "Confidential voting is an excellent use case for fhEVM. Votes can be encrypted, tallied homomorphically (without revealing individual votes), and only the final result is decrypted. This provides both privacy and verifiability.",
+    explanation: "FHE allows comparing encrypted bids directly. The auction contract can determine the highest bid without decrypting any individual bid. Only the winning amount needs decryption, and only to relevant parties.",
     source: {
       type: "docs",
       reference: "https://docs.zama.ai/fhevm",
@@ -321,16 +321,37 @@ export const questions: Question[] = [
   {
     id: "B017",
     difficulty: "beginner",
-    section: "Use Cases",
-    question: "How can FHE help with DeFi (Decentralized Finance) applications?",
+    section: "Real Use Cases",
+    question: "How can FHE protect against MEV (Miner Extractable Value)?",
     options: [
-      "It cannot - DeFi requires transparent transactions",
-      "By enabling private trading amounts, hidden order books, and confidential lending",
-      "By making transactions faster",
-      "By reducing gas costs"
+      "By making transactions process faster than bots can react",
+      "By encrypting transaction details so ordering can't be exploited",
+      "By requiring validators to stake collateral against front-running",
+      "By randomizing transaction order in each block"
     ],
     correctAnswer: 1,
-    explanation: "FHE enables confidential DeFi where trading amounts, positions, and strategies can remain private. This prevents front-running, MEV extraction, and provides the same privacy expectations users have in traditional finance.",
+    explanation: "MEV attacks exploit visible transaction data (swap amounts, bid values). With encrypted inputs, attackers can't see what they'd be front-running. The transaction intent remains hidden until execution.",
+    source: {
+      type: "docs",
+      reference: "https://docs.zama.ai/fhevm",
+      retrievedAt: "2026-01-07"
+    }
+  },
+
+  // Section: Common Misconceptions (3 questions)
+  {
+    id: "B018",
+    difficulty: "beginner",
+    section: "Common Misconceptions",
+    question: "'Using fhEVM makes my entire smart contract private.' This statement is:",
+    options: [
+      "True—all contract state becomes encrypted automatically",
+      "False—only values you explicitly encrypt are private",
+      "True—fhEVM encrypts all storage and function calls",
+      "False—fhEVM only hides transaction sender addresses"
+    ],
+    correctAnswer: 1,
+    explanation: "fhEVM encrypts what you tell it to encrypt. Public variables, function signatures, and plaintext state remain visible. You must deliberately use encrypted types for data you want to keep confidential.",
     source: {
       type: "docs",
       reference: "https://docs.zama.ai/fhevm",
@@ -338,18 +359,37 @@ export const questions: Question[] = [
     }
   },
   {
-    id: "B018",
+    id: "B019",
     difficulty: "beginner",
-    section: "Use Cases",
-    question: "What problem does fhEVM solve for blockchain gaming?",
+    section: "Common Misconceptions",
+    question: "'FHE is too slow to be practical.' How accurate is this for Zama's implementation?",
     options: [
-      "It makes games run faster",
-      "It enables hidden information (like cards in hand or fog of war) on a transparent blockchain",
-      "It reduces the cost of minting NFTs",
-      "It allows games to run without internet"
+      "Fully accurate—FHE is only useful for research",
+      "Outdated—Zama has optimized TFHE for practical use cases",
+      "Accurate for complex operations, false for simple ones",
+      "Irrelevant—blockchain is already slow, FHE adds nothing"
     ],
     correctAnswer: 1,
-    explanation: "Blockchains are transparent by default, making games with hidden information (poker hands, strategy games) difficult. fhEVM allows game state to be encrypted, enabling true hidden information while maintaining blockchain verifiability.",
+    explanation: "While FHE has overhead, Zama's TFHE implementation with hardware acceleration makes many real-world use cases practical. Operations like encrypted transfers and comparisons run in reasonable time for blockchain applications.",
+    source: {
+      type: "docs",
+      reference: "https://docs.zama.ai/fhevm",
+      retrievedAt: "2026-01-07"
+    }
+  },
+  {
+    id: "B020",
+    difficulty: "beginner",
+    section: "Common Misconceptions",
+    question: "Do developers need deep cryptography knowledge to use fhEVM?",
+    options: [
+      "Yes—you must understand lattice-based cryptography",
+      "No—the library abstracts cryptographic complexity",
+      "Partially—you need to implement custom encryption schemes",
+      "Yes—key management requires cryptographic expertise"
+    ],
+    correctAnswer: 1,
+    explanation: "fhEVM provides a high-level Solidity API. Developers work with types like euint32 and functions like TFHE.add(). The underlying cryptography (TFHE, bootstrapping, noise) is handled by the library and infrastructure.",
     source: {
       type: "docs",
       reference: "https://docs.zama.ai/fhevm",
@@ -1062,7 +1102,16 @@ export const questions: Question[] = [
   },
 ];
 
-export const sections = [
+export const beginnerSections = [
+  "FHE Fundamentals",
+  "TFHE Scheme Basics",
+  "fhEVM as Solidity Library",
+  "Developer Mental Model",
+  "Real Use Cases",
+  "Common Misconceptions"
+];
+
+export const advancedSections = [
   "Architecture & Components",
   "Data Flow & Encryption", 
   "Decryption Mechanisms",
