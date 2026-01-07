@@ -165,15 +165,15 @@ export const questions: Question[] = [
   {
     id: "7RMC",
     section: "Decryption Mechanisms",
-    question: "In the public decryption flow, who calls FHE.checkSignatures() on the Host Chain?",
+    question: "In the public decryption flow, who initiates the call that leads to FHE.checkSignatures() on the Host Chain?",
     options: [
-      "The KMS nodes automatically",
-      "The Gateway contract",
-      "The user/relayer submitting the decryption result",
-      "The original App contract"
+      "The KMS nodes, by pushing the result directly to the Host Chain",
+      "The Gateway contract, via a cross-chain message to the Host Chain",
+      "The user/relayer, by calling the App contract's callback",
+      "The Coprocessor, after completing the decryption computation"
     ],
     correctAnswer: 2,
-    explanation: "Public decryption follows a 'self-relaying' model. Anyone can request decryption via the Relayer SDK, receive the signed plaintext from the Gateway, and then submit it to the Host Chain where FHE.checkSignatures() verifies the KMS signatures."
+    explanation: "Public decryption follows a 'self-relaying' model. The user/relayer receives the signed plaintext from the Gateway, then submits it to the App contract's callback function, which in turn calls FHE.checkSignatures() to verify the KMS signatures."
   },
   {
     id: "Q7KT",
@@ -296,6 +296,7 @@ export const questions: Question[] = [
     correctAnswer: 1,
     explanation: "Note: Key rotation is not yet implemented as of early 2026. Once available, Zama will use FHE key switching. When a computation involves ciphertexts encrypted under older keys, the Coprocessor will use KSKs to convert them to the current key 'just-in-time' during execution."
   },
+
   {
     id: "HZ5Z",
     section: "Advanced Concepts",
@@ -303,11 +304,11 @@ export const questions: Question[] = [
     options: [
       "Network attackers intercepting traffic between KMS nodes",
       "Malicious smart contracts on the Host Chain",
-      "The KMS node operator themselves accessing the key material",
+      "The KMS node operator accessing the key in clear at runtime",
       "Coprocessors submitting fraudulent computation results"
     ],
     correctAnswer: 2,
-    explanation: "Nitro Enclaves create an isolated execution environment where even the node operator (with root access to the host machine) cannot access the key shares. The enclave's memory is encrypted and inaccessible from outside. Network security and smart contract threats are handled by other mechanisms."
+    explanation: "Nitro Enclaves create an isolated execution environment where even the node operator (with root access to the host machine) cannot access the key shares in clear at runtime. The enclave's memory is encrypted and inaccessible from outside. Note: operators still have access to their encrypted backups."
   },
   {
     id: "2E4G",
