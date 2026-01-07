@@ -413,6 +413,71 @@ export const questions: Question[] = [
     correctAnswer: 0,
     explanation: "The Host Chain performs 'symbolic execution' - it only manipulates handles, never ciphertexts. The result handle is deterministically derived as hash(op_type, input_handles, chain_id) || result_type, allowing it to be returned immediately. The actual FHE computation happens asynchronously in the Coprocessor."
   },
+  {
+    id: 32,
+    section: "Service Interactions",
+    question: "How does the tfhe-worker know when new FHE computations are pending?",
+    options: [
+      "The host-listener calls the worker's gRPC endpoint directly",
+      "The Gateway broadcasts a notification via its Arbitrum sequencer",
+      "A database trigger notifies the worker when new work is inserted",
+      "The worker subscribes to Host Chain events via RPC"
+    ],
+    correctAnswer: 2,
+    explanation: "A PostgreSQL trigger (work_updated_trigger_from_computations_insertions) fires NOTIFY after INSERT statements on the computations table. The tfhe-worker listens on this channel via PgListener. It also has a fallback polling interval in case notifications are missed."
+  },
+  {
+    id: 33,
+    section: "Service Interactions",
+    question: "How do multiple tfhe-worker instances avoid processing the same computation twice?",
+    options: [
+      "Each worker is assigned specific tenant IDs at startup",
+      "The database query locks selected rows so other workers skip them",
+      "Workers coordinate via a Redis distributed lock",
+      "The Gateway assigns work to specific workers round-robin"
+    ],
+    correctAnswer: 1,
+    explanation: "The tfhe-worker's query uses SELECT ... FOR UPDATE SKIP LOCKED. This PostgreSQL feature locks selected rows for the duration of the transaction - other workers querying simultaneously skip already-locked rows and grab different work items. No external coordination service is needed."
+  },
+  {
+    id: 34,
+    section: "Service Interactions",
+    question: "At what granularity does the tfhe-worker fetch pending computations?",
+    options: [
+      "One computation at a time for maximum consistency",
+      "All computations from a single Host Chain block",
+      "All computations from a single Ethereum transaction",
+      "Up to a configurable batch limit across multiple transactions"
+    ],
+    correctAnswer: 3,
+    explanation: "The tfhe-worker queries up to work_items_batch_size (default: 100) pending computations regardless of which block or transaction they came from. It then groups them by tenant and transaction to build the DFG. This allows efficient batching while respecting dependencies."
+  },
+  {
+    id: 35,
+    section: "Advanced Concepts",
+    question: "In the Coprocessor's DFG scheduler, what does the 'MaxParallelism' partition strategy do?",
+    options: [
+      "Assigns each operation to a separate CPU core",
+      "Groups sequential chains while keeping independent branches separate for parallel execution",
+      "Groups all operations from the same transaction into a single partition",
+      "Distributes operations evenly across partitions by operation type"
+    ],
+    correctAnswer: 1,
+    explanation: "MaxParallelism groups sequential chains (A→B→C where each has one parent and one child) into single execution units, but keeps independent branches separate so they can run in parallel. This balances parallelism against scheduling overhead."
+  },
+  {
+    id: 36,
+    section: "Advanced Concepts",
+    question: "What happens if the DFG contains a dependency cycle (operation A needs B, B needs A)?",
+    options: [
+      "The cycle is broken by executing A first with a placeholder value",
+      "Operations in the cycle are marked as failed and skipped",
+      "The worker deadlocks until manual intervention",
+      "The cycle is resolved by executing both operations simultaneously"
+    ],
+    correctAnswer: 1,
+    explanation: "The DFG builder uses Tarjan's algorithm to detect strongly connected components (cycles). Operations in a cycle are marked as is_uncomputable, error results are stored, and the failure cascades to all dependent operations. The worker continues processing other work."
+  },
 ];
 
 export const sections = [
