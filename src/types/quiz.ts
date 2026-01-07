@@ -1,5 +1,5 @@
 export interface Question {
-  id: number;
+  id: string;  // 4-letter unique identifier (e.g., "TP8Q")
   section: string;
   question: string;
   options: string[];

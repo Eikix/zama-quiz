@@ -1,4 +1,5 @@
 import type { ShuffledQuestion } from '../types/quiz';
+import { ReportButton } from './ReportButton';
 
 interface QuestionCardProps {
   question: ShuffledQuestion;
@@ -20,10 +21,18 @@ export function QuestionCard({
 
   return (
     <div className="bg-stone-800 rounded-2xl p-8 shadow-xl border border-stone-700">
-      <div className="mb-2">
+      <div className="mb-2 flex items-center justify-between">
         <span className="text-xs font-semibold text-orange-400 uppercase tracking-wider">
           {question.section}
         </span>
+        <ReportButton
+          questionId={question.id}
+          questionText={question.question}
+          options={question.options}
+          correctAnswerIndex={question.correctAnswer}
+          section={question.section}
+          explanation={question.explanation}
+        />
       </div>
       
       <h2 className="text-xl font-semibold text-white mb-6 leading-relaxed">

@@ -3,7 +3,7 @@ import type { Question } from '../types/quiz';
 export const questions: Question[] = [
   // Section 1: Architecture & Components
   {
-    id: 1,
+    id: "TP8Q",
     section: "Architecture & Components",
     question: "Which component is responsible for performing the actual FHE computations on encrypted ciphertexts?",
     options: [
@@ -16,7 +16,7 @@ export const questions: Question[] = [
     explanation: "The Coprocessor is the off-chain computation engine that executes FHE operations (add, mul, div, cmp, etc.) using the tfhe-rs library. The Host Chain only handles symbolic execution, and the Gateway coordinates but doesn't compute."
   },
   {
-    id: 2,
+    id: "C567",
     section: "Architecture & Components",
     question: "The Zama Gateway is implemented as:",
     options: [
@@ -29,7 +29,7 @@ export const questions: Question[] = [
     explanation: "The Gateway is implemented using the Arbitrum stack as an optimistic rollup, with a sequencer operated by Conduit. This provides the coordination layer for the protocol."
   },
   {
-    id: 3,
+    id: "VJ5N",
     section: "Architecture & Components",
     question: "Zama's TKMS uses 13 MPC nodes with a corruption threshold of 4. How many node responses are required for User Decryption?",
     options: [
@@ -42,7 +42,7 @@ export const questions: Question[] = [
     explanation: "User decryption requires 2t+1 = 9 nodes. Each KMS node encrypts its partial decryption share under the user's public key, so only the user can combine them and see the plaintext. This threshold ensures correctness even with t=4 malicious nodes. Public decryption only requires t+1 = 5 nodes since shares are combined on-chain."
   },
   {
-    id: 4,
+    id: "EY35",
     section: "Architecture & Components",
     question: "Where are the actual FHE ciphertexts stored in the Zama protocol?",
     options: [
@@ -55,7 +55,7 @@ export const questions: Question[] = [
     explanation: "Ciphertexts are stored off-chain in the Coprocessor DA. Only 32-byte handles (references) are stored on-chain to minimize gas costs. The Gateway stores ciphertext commits (digests/hashes), not the actual ciphertexts."
   },
   {
-    id: 5,
+    id: "XD2L",
     section: "Architecture & Components",
     question: "Which of the following is NOT a Host Chain (L1) smart contract?",
     options: [
@@ -70,7 +70,7 @@ export const questions: Question[] = [
 
   // Section 2: Data Flow & Encryption
   {
-    id: 6,
+    id: "GTY3",
     section: "Data Flow & Encryption",
     question: "Which of the following is NOT a purpose of the ZKPoK (Zero-Knowledge Proof of Knowledge) in the Zama protocol?",
     options: [
@@ -83,7 +83,7 @@ export const questions: Question[] = [
     explanation: "The ZKPoK serves to: (1) prove knowledge of the plaintext, (2) prevent selective failure attacks by validating noise distribution, and (3) ensure correct ciphertext construction. Token balance verification is handled separately by the payment system, not the ZKPoK."
   },
   {
-    id: 7,
+    id: "Z8WJ",
     section: "Data Flow & Encryption",
     question: "How is a result handle derived after an FHE operation on the Host Chain?",
     options: [
@@ -96,7 +96,7 @@ export const questions: Question[] = [
     explanation: "Result handles are deterministically derived from the operation type, input handles, and chain ID. This allows the symbolic execution on-chain to compute the same handle that the Coprocessor will use to store the result."
   },
   {
-    id: 8,
+    id: "JNVZ",
     section: "Data Flow & Encryption",
     question: "When a user submits encrypted input with a ZKPoK, which component performs the cryptographic verification of the zero-knowledge proof itself?",
     options: [
@@ -109,7 +109,7 @@ export const questions: Question[] = [
     explanation: "ZKPoK cryptographic verification is computationally expensive, so it's performed off-chain by Coprocessors. The Gateway's InputVerification contract only emits events to trigger verification. After verifying the proof, Coprocessors extract ciphertexts, derive handles, and sign an EIP-712 attestation."
   },
   {
-    id: 9,
+    id: "33TG",
     section: "Data Flow & Encryption",
     question: "When FHE.fromExternal() is called on the Host Chain, what does the InputVerifier contract verify?",
     options: [
@@ -122,7 +122,7 @@ export const questions: Question[] = [
     explanation: "The InputVerifier contract performs on-chain signature verification, not ZKPoK verification. It checks that a threshold of valid Coprocessor signatures attest to the handles. The inputProof contains: numHandles + numSigners + handles + coprocessorSignatures. This is an indirect verification - trusting Coprocessors' attestation that they verified the ZKPoK off-chain."
   },
   {
-    id: 10,
+    id: "LHSX",
     section: "Data Flow & Encryption",
     question: "How many FHE key pairs are used in the Zama protocol?",
     options: [
@@ -135,7 +135,7 @@ export const questions: Question[] = [
     explanation: "The protocol uses a single global FHE key pair shared across all applications. This enables ciphertext composability - encrypted values from different contracts can be used together in FHE operations (when authorized via ACL). Access control is enforced by ACL contracts, not by key separation."
   },
   {
-    id: 11,
+    id: "5WQE",
     section: "Data Flow & Encryption",
     question: "Which of the following is NOT part of the auxiliary data embedded in a ZKPoK?",
     options: [
@@ -150,7 +150,7 @@ export const questions: Question[] = [
 
   // Section 3: Decryption Mechanisms
   {
-    id: 12,
+    id: "NCPV",
     section: "Decryption Mechanisms",
     question: "What is the key difference between public decryption and user decryption?",
     options: [
@@ -163,7 +163,7 @@ export const questions: Question[] = [
     explanation: "Public decryption makes the plaintext visible to everyone (e.g., for auction results). User decryption re-encrypts the result under the user's public key, so only they can decrypt it locally."
   },
   {
-    id: 13,
+    id: "7RMC",
     section: "Decryption Mechanisms",
     question: "In the public decryption flow, who calls FHE.checkSignatures() on the Host Chain?",
     options: [
@@ -176,7 +176,7 @@ export const questions: Question[] = [
     explanation: "Public decryption follows a 'self-relaying' model. Anyone can request decryption via the Relayer SDK, receive the signed plaintext from the Gateway, and then submit it to the Host Chain where FHE.checkSignatures() verifies the KMS signatures."
   },
   {
-    id: 14,
+    id: "Q7KT",
     section: "Decryption Mechanisms",
     question: "How does a user verify that a user decryption result is legitimate?",
     options: [
@@ -189,7 +189,7 @@ export const questions: Question[] = [
     explanation: "The user receives decryption shares signed by KMS nodes. They verify these signatures against the key-map (KMS verifier addresses from the context) to ensure no KMS node impersonation occurred."
   },
   {
-    id: 15,
+    id: "9LJA",
     section: "Decryption Mechanisms",
     question: "Gateway decryption request IDs follow the format [kmsRequestType | keychainId | counter]. What is the purpose of including kmsRequestType?",
     options: [
@@ -204,7 +204,7 @@ export const questions: Question[] = [
 
   // Section 4: Service Interactions
   {
-    id: 16,
+    id: "S2GR",
     section: "Service Interactions",
     question: "Which statement about Coprocessor-Gateway communication is FALSE?",
     options: [
@@ -217,7 +217,7 @@ export const questions: Question[] = [
     explanation: "FHE computation requests come from the Host Chain, not the Gateway. Coprocessors listen to Host Chain events (via their embedded full node) for FHE operations. The Gateway is used for: (1) ZKPoK verification requests/responses, (2) ACL synchronization, (3) ciphertext commits, and (4) key management info. The Host Chain is where smart contracts emit FHE operation events."
   },
   {
-    id: 17,
+    id: "BGF8",
     section: "Service Interactions",
     question: "Where does the Relayer sit in the Zama protocol architecture?",
     options: [
@@ -230,20 +230,20 @@ export const questions: Question[] = [
     explanation: "The Relayer sits between the user and the Gateway. It abstracts all Gateway interactions so users only need a Host Chain wallet. The Relayer forwards ZKPoK verification requests, handles decryption coordination, and pays Gateway gas on the user's behalf."
   },
   {
-    id: 18,
+    id: "UVDP",
     section: "Service Interactions",
-    question: "Which event type does the Coprocessor's Host Listener NOT handle?",
+    question: "Which event types does the Coprocessor's Host Listener handle?",
     options: [
-      "TFHE operation events",
-      "ACL allow/delegate events",
-      "ZKPoK verification requests",
-      "Decryption request events"
+      "TFHE operation events and ACL allow/delegate events",
+      "ZKPoK verification requests and decryption requests",
+      "Decryption requests and TFHE operation events",
+      "All of the above"
     ],
-    correctAnswer: 2,
-    explanation: "ZKPoK verification requests come from the Gateway (handled by GW Listener), not the Host Chain. The Host Listener handles TFHE operations, ACL events, and decryption requests - all emitted by Host Chain contracts. Input verification flows through the Gateway first."
+    correctAnswer: 0,
+    explanation: "The Host Listener only handles TFHE operations and ACL events from the Host Chain. ZKPoK verification requests come from the Gateway (handled by GW Listener). Decryption requests are handled by Gateway contracts, then forwarded to KMS Core by the KMS Connector - not by the Coprocessor."
   },
   {
-    id: 19,
+    id: "DBC6",
     section: "Service Interactions",
     question: "What does the KMS Connector do?",
     options: [
@@ -256,7 +256,7 @@ export const questions: Question[] = [
     explanation: "The KMS Connector picks up events (like decryption requests) from the Gateway via a GW Listener and forwards them to the KMS Core for MPC execution. It then relays responses back to the Gateway."
   },
   {
-    id: 20,
+    id: "WQAM",
     section: "Service Interactions",
     question: "How many Coprocessors does Zama operate as of early 2026?",
     options: [
@@ -271,7 +271,7 @@ export const questions: Question[] = [
 
   // Section 5: Advanced Concepts
   {
-    id: 21,
+    id: "F683",
     section: "Advanced Concepts",
     question: "According to NIST SP 800-57 (followed by Zama), what can you do with an Active key that you CANNOT do with a Suspended key?",
     options: [
@@ -284,20 +284,20 @@ export const questions: Question[] = [
     explanation: "Both Active and Suspended keys allow inputs, FHE computation, decryption, and key switching (both as source and target). The key difference: you cannot launch a new key rotation from a Suspended key. Note: key switching (converting ciphertexts between keys) is different from key rotation (the administrative process of replacing a key with a new one)."
   },
   {
-    id: 22,
+    id: "YK7J",
     section: "Advanced Concepts",
-    question: "How does the Zama protocol handle key rotation for existing ciphertexts?",
+    question: "How will the Zama protocol handle key rotation for existing ciphertexts (planned feature, not yet implemented as of early 2026)?",
     options: [
       "All ciphertexts must be re-encrypted manually",
-      "Key Switching Keys (KSK) convert ciphertexts on-demand during computation",
+      "Key Switching Keys (KSK) will convert ciphertexts on-demand during computation",
       "Old ciphertexts become permanently inaccessible",
       "A migration ceremony decrypts and re-encrypts all data"
     ],
     correctAnswer: 1,
-    explanation: "Zama uses FHE key switching. When a computation involves ciphertexts encrypted under older keys, the Coprocessor uses KSKs to convert them to the current key 'just-in-time' during execution."
+    explanation: "Note: Key rotation is not yet implemented as of early 2026. Once available, Zama will use FHE key switching. When a computation involves ciphertexts encrypted under older keys, the Coprocessor will use KSKs to convert them to the current key 'just-in-time' during execution."
   },
   {
-    id: 23,
+    id: "HZ5Z",
     section: "Advanced Concepts",
     question: "AWS Nitro Enclaves in TKMS protect key shares from which threat?",
     options: [
@@ -310,7 +310,7 @@ export const questions: Question[] = [
     explanation: "Nitro Enclaves create an isolated execution environment where even the node operator (with root access to the host machine) cannot access the key shares. The enclave's memory is encrypted and inaccessible from outside. Network security and smart contract threats are handled by other mechanisms."
   },
   {
-    id: 24,
+    id: "2E4G",
     section: "Advanced Concepts",
     question: "What is the role of tfhe-rs in the Zama ecosystem?",
     options: [
@@ -323,7 +323,7 @@ export const questions: Question[] = [
     explanation: "tfhe-rs is the cryptographic foundation implementing LWE/GLWE-based TFHE. It provides Programmable Bootstrapping (PBS), keyswitching, and the FheUint/FheBool types. Coprocessors use it for all FHE computations."
   },
   {
-    id: 25,
+    id: "KU2X",
     section: "Advanced Concepts",
     question: "Why is random 'noise' added to TFHE ciphertexts during encryption?",
     options: [
@@ -336,7 +336,7 @@ export const questions: Question[] = [
     explanation: "Noise is essential for security - without it, TFHE encryption could be broken. The noise is encoded in the least significant bits of the ciphertext. The tradeoff: each operation increases noise, and if it grows too large it corrupts the message."
   },
   {
-    id: 26,
+    id: "49YE",
     section: "Advanced Concepts",
     question: "What problem does Programmable Bootstrapping (PBS) solve in TFHE?",
     options: [
@@ -349,7 +349,7 @@ export const questions: Question[] = [
     explanation: "Noise grows with each FHE operation. If it gets too large, it corrupts the encrypted result. PBS resets noise back to a safe level, allowing more operations to be performed. Without PBS, you'd hit a noise limit and need to decrypt early."
   },
   {
-    id: 27,
+    id: "MPXV",
     section: "Advanced Concepts",
     question: "Why would you re-randomize a ciphertext before using it in an FHE computation?",
     options: [
@@ -362,7 +362,7 @@ export const questions: Question[] = [
     explanation: "Re-randomization adds fresh randomness to a ciphertext. Without it, an attacker observing the same ciphertext used multiple times could potentially learn information about the plaintext. It's a security hardening measure for sensitive computations."
   },
   {
-    id: 28,
+    id: "64VC",
     section: "Advanced Concepts",
     question: "According to Zama's whitepaper benchmarks, approximately how long does a 64-bit encrypted multiplication take on GPU (2x NVIDIA H100)?",
     options: [
@@ -375,7 +375,7 @@ export const questions: Question[] = [
     explanation: "A euint64 multiplication takes approximately 166ms on GPU (2x H100). GPU acceleration provides roughly 2-3x speedup for complex operations like multiplication compared to CPU."
   },
   {
-    id: 29,
+    id: "PJUT",
     section: "Advanced Concepts",
     question: "According to Zama's whitepaper benchmarks, approximately how long does a 64-bit encrypted addition take on CPU (AMD EPYC 9R14)?",
     options: [
@@ -388,7 +388,7 @@ export const questions: Question[] = [
     explanation: "A euint64 addition takes approximately 109ms on CPU (AMD EPYC 9R14 with 192 cores). Addition is faster than multiplication but slower than bitwise operations. On GPU, addition drops to ~20ms."
   },
   {
-    id: 30,
+    id: "8XSA",
     section: "Advanced Concepts",
     question: "Which FHE operation is fastest according to Zama's whitepaper benchmarks?",
     options: [
@@ -401,7 +401,7 @@ export const questions: Question[] = [
     explanation: "Bitwise operations (AND/OR) are the fastest at ~19-23ms on CPU and ~3-4ms on GPU for euint64. This is because they don't require Programmable Bootstrapping, unlike arithmetic operations which are significantly slower."
   },
   {
-    id: 31,
+    id: "RDRR",
     section: "Data Flow & Encryption",
     question: "When a user calls FHE.add(handleA, handleB) on the Host Chain, what does the FHEVMExecutor contract return?",
     options: [
@@ -414,7 +414,7 @@ export const questions: Question[] = [
     explanation: "The Host Chain performs 'symbolic execution' - it only manipulates handles, never ciphertexts. The result handle is deterministically derived as hash(op_type, input_handles, chain_id) || result_type, allowing it to be returned immediately. The actual FHE computation happens asynchronously in the Coprocessor."
   },
   {
-    id: 32,
+    id: "ATP8",
     section: "Service Interactions",
     question: "How does the tfhe-worker know when new FHE computations are pending?",
     options: [
@@ -427,7 +427,7 @@ export const questions: Question[] = [
     explanation: "A PostgreSQL trigger (work_updated_trigger_from_computations_insertions) fires NOTIFY after INSERT statements on the computations table. The tfhe-worker listens on this channel via PgListener. It also has a fallback polling interval in case notifications are missed."
   },
   {
-    id: 33,
+    id: "T8MP",
     section: "Service Interactions",
     question: "How do multiple tfhe-worker instances avoid processing the same computation twice?",
     options: [
@@ -440,7 +440,7 @@ export const questions: Question[] = [
     explanation: "The tfhe-worker's query uses SELECT ... FOR UPDATE SKIP LOCKED. This PostgreSQL feature locks selected rows for the duration of the transaction - other workers querying simultaneously skip already-locked rows and grab different work items. No external coordination service is needed."
   },
   {
-    id: 34,
+    id: "CNL6",
     section: "Service Interactions",
     question: "At what granularity does the tfhe-worker fetch pending computations?",
     options: [
@@ -453,7 +453,7 @@ export const questions: Question[] = [
     explanation: "The tfhe-worker queries up to work_items_batch_size (default: 100) pending computations regardless of which block or transaction they came from. It then groups them by tenant and transaction to build the DFG. This allows efficient batching while respecting dependencies."
   },
   {
-    id: 35,
+    id: "V3JM",
     section: "Advanced Concepts",
     question: "In the Coprocessor's DFG scheduler, what does the 'MaxParallelism' partition strategy do?",
     options: [
@@ -466,7 +466,7 @@ export const questions: Question[] = [
     explanation: "MaxParallelism groups sequential chains (A→B→C where each has one parent and one child) into single execution units, but keeps independent branches separate so they can run in parallel. This balances parallelism against scheduling overhead."
   },
   {
-    id: 36,
+    id: "EHH4",
     section: "Advanced Concepts",
     question: "What happens if the DFG contains a dependency cycle (operation A needs B, B needs A)?",
     options: [
