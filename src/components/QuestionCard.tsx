@@ -1,7 +1,7 @@
-import type { Question } from '../types/quiz';
+import type { ShuffledQuestion } from '../types/quiz';
 
 interface QuestionCardProps {
-  question: Question;
+  question: ShuffledQuestion;
   selectedAnswer: number | null;
   showExplanation: boolean;
   locked: boolean;
@@ -15,7 +15,7 @@ export function QuestionCard({
   locked,
   onSelectAnswer 
 }: QuestionCardProps) {
-  const isCorrect = selectedAnswer === question.correctAnswer;
+  const isCorrect = selectedAnswer === question.shuffledCorrectAnswer;
   const canSelect = !showExplanation && !locked;
 
   return (
@@ -31,9 +31,9 @@ export function QuestionCard({
       </h2>
 
       <div className="space-y-3">
-        {question.options.map((option, index) => {
+        {question.shuffledOptions.map((option, index) => {
           const isSelected = selectedAnswer === index;
-          const isCorrectOption = index === question.correctAnswer;
+          const isCorrectOption = index === question.shuffledCorrectAnswer;
           
           let buttonClass = "w-full p-4 rounded-xl text-left transition-all duration-200 border-2 ";
           

@@ -1,8 +1,8 @@
-import type { Question, SectionScore } from '../types/quiz';
+import type { ShuffledQuestion, SectionScore } from '../types/quiz';
 import { sections } from '../data/questions';
 
 interface ResultsProps {
-  questions: Question[];
+  questions: ShuffledQuestion[];
   answers: (number | null)[];
   onRestart: () => void;
   onReview: () => void;
@@ -10,7 +10,7 @@ interface ResultsProps {
 
 export function Results({ questions, answers, onRestart, onReview }: ResultsProps) {
   const correctCount = answers.reduce<number>((acc, answer, index) => {
-    return answer === questions[index].correctAnswer ? acc + 1 : acc;
+    return answer === questions[index].shuffledCorrectAnswer ? acc + 1 : acc;
   }, 0);
 
   const percentage = Math.round((correctCount / questions.length) * 100);
@@ -19,7 +19,7 @@ export function Results({ questions, answers, onRestart, onReview }: ResultsProp
     const sectionQuestions = questions.filter(q => q.section === section);
     const correct = sectionQuestions.filter((q) => {
       const questionIndex = questions.findIndex(qq => qq.id === q.id);
-      return answers[questionIndex] === q.correctAnswer;
+      return answers[questionIndex] === q.shuffledCorrectAnswer;
     }).length;
     return { name: section, correct, total: sectionQuestions.length };
   });

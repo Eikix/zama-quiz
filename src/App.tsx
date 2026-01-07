@@ -1,11 +1,12 @@
-import { useState, useCallback, useEffect } from 'react';
-import { questions } from './data/questions';
+import { useState, useCallback, useEffect, useMemo } from 'react';
+import { questions as originalQuestions } from './data/questions';
 import { WelcomeScreen } from './components/WelcomeScreen';
 import { QuestionCard } from './components/QuestionCard';
 import { ProgressBar } from './components/ProgressBar';
 import { NavigationButtons } from './components/NavigationButtons';
 import { QuestionNav } from './components/QuestionNav';
 import { Results } from './components/Results';
+import type { ShuffledQuestion } from './types/quiz';
 
 type Screen = 'welcome' | 'quiz' | 'results';
 
@@ -16,6 +17,23 @@ interface SavedState {
   currentQuestion: number;
   answers: (number | null)[];
   reviewMode: boolean;
+  questionOrder: number[];
+  optionOrders: number[][];
+}
+
+function shuffle<T>(array: T[]): T[] {
+  const result = [...array];
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
+}
+
+function generateShuffleState(): { questionOrder: number[]; optionOrders: number[][] } {
+  const questionOrder = shuffle(originalQuestions.map((_, i) => i));
+  const optionOrders = originalQuestions.map(q => shuffle(q.options.map((_, i) => i)));
+  return { questionOrder, optionOrders };
 }
 
 function loadSavedState(): SavedState | null {
@@ -23,7 +41,8 @@ function loadSavedState(): SavedState | null {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
       const state = JSON.parse(saved) as SavedState;
-      if (state.answers.length === questions.length) {
+      if (state.answers.length === originalQuestions.length && 
+          state.questionOrder?.length === originalQuestions.length) {
         return state;
       }
     }
@@ -45,32 +64,56 @@ function clearSavedState() {
 
 function App() {
   const savedState = loadSavedState();
+  const initialShuffle = savedState?.questionOrder 
+    ? { questionOrder: savedState.questionOrder, optionOrders: savedState.optionOrders }
+    : generateShuffleState();
   
   const [screen, setScreen] = useState<Screen>(savedState?.screen ?? 'welcome');
   const [currentQuestion, setCurrentQuestion] = useState(savedState?.currentQuestion ?? 0);
   const [answers, setAnswers] = useState<(number | null)[]>(
-    savedState?.answers ?? Array(questions.length).fill(null)
+    savedState?.answers ?? Array(originalQuestions.length).fill(null)
   );
   const [showExplanation, setShowExplanation] = useState(savedState?.reviewMode ?? false);
   const [reviewMode, setReviewMode] = useState(savedState?.reviewMode ?? false);
+  const [questionOrder, setQuestionOrder] = useState<number[]>(initialShuffle.questionOrder);
+  const [optionOrders, setOptionOrders] = useState<number[][]>(initialShuffle.optionOrders);
+
+  const shuffledQuestions: ShuffledQuestion[] = useMemo(() => {
+    return questionOrder.map(originalIndex => {
+      const q = originalQuestions[originalIndex];
+      const optionOrder = optionOrders[originalIndex];
+      return {
+        ...q,
+        shuffledOptions: optionOrder.map(i => q.options[i]),
+        shuffledCorrectAnswer: optionOrder.indexOf(q.correctAnswer),
+        optionMapping: optionOrder,
+      };
+    });
+  }, [questionOrder, optionOrders]);
 
   useEffect(() => {
-    saveState({ screen, currentQuestion, answers, reviewMode });
-  }, [screen, currentQuestion, answers, reviewMode]);
+    saveState({ screen, currentQuestion, answers, reviewMode, questionOrder, optionOrders });
+  }, [screen, currentQuestion, answers, reviewMode, questionOrder, optionOrders]);
 
   const handleStart = useCallback(() => {
+    const newShuffle = generateShuffleState();
+    setQuestionOrder(newShuffle.questionOrder);
+    setOptionOrders(newShuffle.optionOrders);
     setScreen('quiz');
     setCurrentQuestion(0);
-    setAnswers(Array(questions.length).fill(null));
+    setAnswers(Array(originalQuestions.length).fill(null));
     setShowExplanation(false);
     setReviewMode(false);
   }, []);
 
   const handleReset = useCallback(() => {
     clearSavedState();
+    const newShuffle = generateShuffleState();
+    setQuestionOrder(newShuffle.questionOrder);
+    setOptionOrders(newShuffle.optionOrders);
     setScreen('welcome');
     setCurrentQuestion(0);
-    setAnswers(Array(questions.length).fill(null));
+    setAnswers(Array(originalQuestions.length).fill(null));
     setShowExplanation(false);
     setReviewMode(false);
   }, []);
@@ -89,12 +132,12 @@ function App() {
   }, []);
 
   const handleNext = useCallback(() => {
-    if (currentQuestion < questions.length - 1) {
+    if (currentQuestion < shuffledQuestions.length - 1) {
       setCurrentQuestion(prev => prev + 1);
       setShowExplanation(reviewMode);
       scrollToTop();
     }
-  }, [currentQuestion, reviewMode, scrollToTop]);
+  }, [currentQuestion, reviewMode, scrollToTop, shuffledQuestions.length]);
 
   const handlePrevious = useCallback(() => {
     if (currentQuestion > 0) {
@@ -142,7 +185,7 @@ function App() {
       <div className="min-h-screen bg-stone-900 flex items-center justify-center p-4">
         <div className="w-full max-w-lg">
           <Results 
-            questions={questions}
+            questions={shuffledQuestions}
             answers={answers}
             onRestart={handleRestart}
             onReview={handleReview}
@@ -179,12 +222,12 @@ function App() {
           <div className="lg:col-span-3">
             <ProgressBar 
               current={currentQuestion} 
-              total={questions.length}
+              total={shuffledQuestions.length}
               answeredCount={answeredCount}
             />
             
             <QuestionCard
-              question={questions[currentQuestion]}
+              question={shuffledQuestions[currentQuestion]}
               selectedAnswer={answers[currentQuestion]}
               showExplanation={showExplanation}
               locked={!reviewMode && answers[currentQuestion] !== null}
@@ -193,7 +236,7 @@ function App() {
 
             <NavigationButtons
               currentQuestion={currentQuestion}
-              totalQuestions={questions.length}
+              totalQuestions={shuffledQuestions.length}
               hasAnswered={answers[currentQuestion] !== null}
               showExplanation={showExplanation}
               reviewMode={reviewMode}
@@ -205,10 +248,10 @@ function App() {
 
           <div className="lg:col-span-1">
             <QuestionNav
-              totalQuestions={questions.length}
+              totalQuestions={shuffledQuestions.length}
               currentQuestion={currentQuestion}
               answers={answers}
-              correctAnswers={questions.map(q => q.correctAnswer)}
+              correctAnswers={shuffledQuestions.map(q => q.shuffledCorrectAnswer)}
               showResults={reviewMode}
               reviewMode={reviewMode}
               onSelectQuestion={handleSelectQuestion}

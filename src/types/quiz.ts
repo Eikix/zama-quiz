@@ -7,6 +7,12 @@ export interface Question {
   explanation: string;
 }
 
+export interface ShuffledQuestion extends Question {
+  shuffledOptions: string[];
+  shuffledCorrectAnswer: number;
+  optionMapping: number[];
+}
+
 export interface QuizState {
   currentQuestion: number;
   answers: (number | null)[];
